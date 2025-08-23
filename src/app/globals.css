@@ -1,26 +1,323 @@
+/* src/app/globals.css */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Theme tokens */
+/* === Theme tokens (light / dark) === */
+:root[data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #fafafa;
+    --elev: #f3f4f6;
+    --text: #0b0f19;
+    --muted: #475569;
+    --border: #e5e7eb;
+    --accent: #22c55e;
+    /* green */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="dark"] {
+    --bg: #0b0f13;
+    --surface: #0f1115;
+    --elev: #15181d;
+    --text: #f5f7fb;
+    --muted: #9aa4b2;
+    --border: #22262c;
+    --accent: #22c55e;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Token utilities */
+.bg-surface {
+    background: var(--surface);
 }
 
+.bg-elev {
+    background: var(--elev);
+}
+
+.text-foreground {
+    color: var(--text);
+}
+
+.text-muted {
+    color: var(--muted);
+}
+
+.border-default {
+    border-color: var(--border);
+}
+
+.bg-accent {
+    background: var(--accent);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+/* Buttons */
+.btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium;
+    color: var(--bg);
+    background: var(--text);
+}
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm;
+    border-color: var(--border);
+    color: var(--text);
+    background: color-mix(in oklch, var(--bg) 88%, transparent);
+}
+
+/* Accent (neon) button — matches Core glow */
+.btn-accent {
+    --_accent: var(--accent, #7BFFA8);
+    /* fallback to your Core green */
+    border-radius: 9999px;
+    padding: .5rem 1rem;
+    font-weight: 500;
+    background: var(--_accent);
+    color: oklch(0.16 0 0);
+    /* near-black text for contrast */
+    box-shadow:
+        0 0 0 1px color-mix(in oklch, var(--_accent) 40%, transparent),
+        0 0 16px color-mix(in oklch, var(--_accent) 60%, transparent),
+        0 0 28px color-mix(in oklch, var(--_accent) 45%, transparent);
+    transition: transform .06s ease, box-shadow .2s ease, background .2s ease, opacity .2s ease;
+}
+
+/* Pill that matches the "Core" badge look */
+.pill-accent {
+    --_accent: var(--accent, #7BFFA8);
+
+    position: relative;
+    isolation: isolate;
+    /* keep glow behind text */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: .5rem 1rem;
+    /* px-4 py-2 */
+    border-radius: 9999px;
+    /* full pill */
+    border: 1px solid color-mix(in oklch, var(--_accent) 35%, transparent);
+    background: color-mix(in oklch, var(--_accent) 14%, transparent);
+    color: var(--_accent);
+    font-weight: 500;
+
+    transition: background .15s ease, border-color .15s ease, transform .06s ease;
+}
+
+/* soft left-side glow like in the overview */
+.pill-accent::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    /* bleed a tiny bit outside border */
+    border-radius: inherit;
+    z-index: -1;
+    background:
+        radial-gradient(60% 90% at 0% 50%,
+            color-mix(in oklch, var(--_accent) 45%, transparent) 0%,
+            transparent 60%);
+    filter: blur(8px);
+    opacity: .7;
+}
+
+.pill-accent:hover {
+    background: color-mix(in oklch, var(--_accent) 20%, transparent);
+    border-color: color-mix(in oklch, var(--_accent) 55%, transparent);
+}
+
+.pill-accent:active {
+    transform: translateY(1px);
+}
+
+.pill-accent:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--_accent) 45%, transparent);
+}
+
+
+/* Pills/chips */
+.pill {
+    @apply rounded-lg border px-4 py-3;
+    border-color: var(--border);
+    background: color-mix(in oklch, var(--elev) 90%, transparent);
+}
+
+.chip {
+    @apply rounded-lg border px-3 py-2 text-sm;
+    border-color: var(--border);
+    background: color-mix(in oklch, var(--elev) 90%, transparent);
+}
+
+
+/* Token utilities */
+.bg-surface {
+    background: var(--surface);
+}
+
+.bg-elev {
+    background: var(--elev);
+}
+
+.text-foreground {
+    color: var(--text);
+}
+
+.text-muted {
+    color: var(--muted);
+}
+
+.border-default {
+    border-color: var(--border);
+}
+
+.bg-accent {
+    background: var(--accent);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+/* Buttons */
+.btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium;
+    color: #0b0f19;
+    background: #fff;
+    /* light fallback */
+    background: var(--text, #fff);
+    color: var(--bg, #0b0f19);
+}
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm;
+    border-color: var(--border);
+    color: var(--text);
+    background: color-mix(in oklch, var(--bg) 88%, transparent);
+}
+
+/* Pills/chips used above */
+.pill {
+    @apply rounded-lg border px-4 py-3;
+    border-color: var(--border);
+    background: color-mix(in oklch, var(--elev) 90%, transparent);
+}
+
+.chip {
+    @apply rounded-lg border px-3 py-2 text-sm;
+    border-color: var(--border);
+    background: color-mix(in oklch, var(--elev) 90%, transparent);
+}
+
+
+@theme {
+    --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+/* Use Inter for body, Fraunces for headings */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-weight: 600;
+}
+
+h2,
+h3 {
+    font-weight: 600;
+}
+
+/* optional: slightly looser body for warmth */
+p,
+li {
+    letter-spacing: 0.003em;
+}
+
+/* --------- Hex net styles --------- */
+@keyframes edge-on {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+        filter: none;
+    }
+
+    2% {
+        opacity: 1;
+        transform: scale(1.03);
+        filter:
+            drop-shadow(0 0 4px var(--hex)) drop-shadow(0 0 14px color-mix(in oklch, var(--hex) 70%, white 0%)) drop-shadow(0 0 22px color-mix(in oklch, var(--hex) 55%, white 0%));
+    }
+
+    6% {
+        opacity: 1;
+    }
+
+    8% {
+        opacity: 0;
+        transform: scale(1);
+        filter: none;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.hex-edge-glow {
+    stroke: var(--hex, #7BFFA8);
+    stroke-width: var(--thick, 2.6);
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0;
+    animation: edge-on var(--period, 26s) linear infinite;
+    animation-delay: var(--delay, 0s);
+    mix-blend-mode: screen;
+    vector-effect: non-scaling-stroke;
+}
+
+
+/* clip helper for the brand area so the glow never leaves the navbar */
+.hex-net-clip {
+    overflow: hidden;
+    /* bigger ellipse, centered a bit right so it sits under the wordmark */
+    -webkit-mask-image: radial-gradient(300px 150px at 38% 52%, #000 75%, transparent 100%);
+    mask-image: radial-gradient(300px 150px at 38% 52%, #000 75%, transparent 100%);
+}
+
+
+.hex-edge-static {
+    stroke: var(--hex, #7BFFA8);
+    stroke-width: var(--thick, 2.8);
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0.95;
+    mix-blend-mode: screen;
+    filter:
+        drop-shadow(0 0 4px var(--hex)) drop-shadow(0 0 14px color-mix(in oklch, var(--hex) 70%, white 0%)) drop-shadow(0 0 22px color-mix(in oklch, var(--hex) 55%, white 0%));
+}
+
+/* faint grid helper (only when debug={true}) */
+.hex-static-debug {
+    stroke: color-mix(in oklch, var(--hex, #7BFFA8) 35%, black);
+    stroke-width: .6;
+    fill: none;
+    opacity: .08;
 }
