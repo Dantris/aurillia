@@ -3,20 +3,19 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Contact — Aurillia",
-    description: "Tell us what you’re building. We’ll reply with next steps and options.",
+    description:
+        "Tell us what you’re building. We’ll reply with next steps and options.",
 };
 
-type SP = Promise<Record<string, string | string[] | undefined>>;
+// Next 15: searchParams is a Promise<Record<string, string | string[] | undefined>>
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function ContactPage({
     searchParams,
-}: { searchParams: SP | Record<string, string | string[] | undefined> }) {
-    const sp =
-        typeof (searchParams as any)?.then === "function"
-            ? await (searchParams as SP)
-            : (searchParams as Record<string, string | string[] | undefined>);
-    const sentVal = sp?.sent;
-    const sent = Array.isArray(sentVal) ? sentVal[0] === "1" : sentVal === "1";
+}: { searchParams?: SearchParams }) {
+    const sp = (await searchParams) ?? {};
+    const raw = sp.sent;
+    const sent = Array.isArray(raw) ? raw[0] === "1" : raw === "1";
 
     return (
         <main className="bg-surface border-b border-default">
