@@ -1,0 +1,55 @@
+{
+    "nav": {
+        "services": "Services",
+        "aurillia": "Aurillia",
+        "contact": "Contact"
+    },
+    "services": {
+        "web": {
+            "title": "Web Development",
+            "desc": "Fast, modern sites that rank, convert, and are easy to update."
+        },
+        "mobile": {
+            "title": "Mobile Apps",
+            "desc": "iOS, Android, or PWA—built once, deployed everywhere."
+        },
+        "fullstack": {
+            "title": "Full-Stack Systems",
+            "desc": "Booking, inventory, dashboards—apps that run your business."
+        },
+        "hardware": {
+            "title": "Hardware & IoT",
+            "desc": "Custom sensors, enclosures, and on-site automation."
+        },
+        "cloud": {
+            "title": "Cloud & AWS",
+            "desc": "Migrations, hosting, and cost-efficient, secure setups."
+        },
+        "ai": {
+            "title": "AI & Automation",
+            "desc": "Chatbots, assistants, and workflows that save time."
+        }
+    },
+    "aurillia": {
+        "core": {
+            "title": "Aurillia Core",
+            "desc": "Backend brain of the system"
+        },
+        "node": {
+            "title": "Aurillia Node",
+            "desc": "Wireless sensor & camera modules"
+        },
+        "sense": {
+            "title": "Aurillia Sense",
+            "desc": "Motion, battery & environment monitoring"
+        },
+        "link": {
+            "title": "Aurillia Link",
+            "desc": "Lightweight secure protocol"
+        },
+        "watch": {
+            "title": "Aurillia Watch",
+            "desc": "App for control & monitoring"
+        }
+    }
+}

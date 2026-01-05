@@ -1,0 +1,55 @@
+{
+    "nav": {
+        "services": "Leistungen",
+        "aurillia": "Aurillia",
+        "contact": "Kontakt"
+    },
+    "services": {
+        "web": {
+            "title": "Webentwicklung",
+            "desc": "Schnelle, moderne Websites, die ranken, konvertieren und leicht zu pflegen sind."
+        },
+        "mobile": {
+            "title": "Mobile Apps",
+            "desc": "iOS, Android oder PWA – einmal gebaut, überall deployt."
+        },
+        "fullstack": {
+            "title": "Full-Stack Systeme",
+            "desc": "Buchung, Lager, Dashboards – Apps, die Ihr Geschäft steuern."
+        },
+        "hardware": {
+            "title": "Hardware & IoT",
+            "desc": "Individuelle Sensoren, Gehäuse und Automatisierung vor Ort."
+        },
+        "cloud": {
+            "title": "Cloud & AWS",
+            "desc": "Migrationen, Hosting und sichere, kosteneffiziente Setups."
+        },
+        "ai": {
+            "title": "KI & Automatisierung",
+            "desc": "Chatbots, Assistenten und Workflows, die Zeit sparen."
+        }
+    },
+    "aurillia": {
+        "core": {
+            "title": "Aurillia Core",
+            "desc": "Das Backend-Gehirn des Systems"
+        },
+        "node": {
+            "title": "Aurillia Node",
+            "desc": "Drahtlose Sensor- & Kameramodule"
+        },
+        "sense": {
+            "title": "Aurillia Sense",
+            "desc": "Bewegung, Batterie & Umgebung überwachen"
+        },
+        "link": {
+            "title": "Aurillia Link",
+            "desc": "Leichtgewichtiges, sicheres Protokoll"
+        },
+        "watch": {
+            "title": "Aurillia Watch",
+            "desc": "App für Steuerung & Monitoring"
+        }
+    }
+}
