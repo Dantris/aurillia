@@ -5,7 +5,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import ThemeToggle from "./theme-toggle";
 import { LOCALE_COOKIE, type Locale } from "@/i18n/config";
 
 type Item = { title: string; href: string; description?: string };
@@ -108,27 +107,29 @@ export default function SiteNavbar() {
     const inAur = pathname?.startsWith("/aur") ?? false;
 
     return (
-        <nav
+            <nav
             ref={navRef}
-            className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-[#f7f7f8]/95 text-slate-900 backdrop-blur shadow-sm supports-[backdrop-filter]:bg-[#f7f7f8]/90"
+            className="sticky top-0 z-50 w-full border-b nav-chrome"
             onMouseLeave={() => setOpen(null)}
-        >
+            >
             {/* top bar */}
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:h-20 md:px-8">
-                {/* Brand */}
+<div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:h-[88px] md:px-10">                {/* Brand */}
                 <Link
-                    href="/"
-                    className="relative flex items-center gap-2 font-semibold tracking-tight text-slate-900"
-                >
-                    <span className="relative inline-block h-2.5 w-2.5 rounded-full bg-orange-500" />
-                    <span className="relative text-xl leading-none">AURILLIA</span>
+                href="/"
+className="relative flex items-center gap-3 font-semibold tracking-[0.04em] text-[color:var(--text)]"                >
+<img
+  src="/icon.svg"
+  alt="Aurillia"
+  className="h-7 w-7 md:h-8 md:w-8"
+  aria-hidden="true"
+/>
+
+<span className="relative text-[1.05rem] md:text-[1.2rem] leading-none">
+  AURILLIA
+</span>
                 </Link>
-
                 {/* Desktop links */}
-                <div className="hidden items-center gap-7 md:flex">
-                    <ThemeToggle />
-                    <LanguageToggle />
-
+<div className="hidden items-center gap-8 lg:gap-10 md:flex">                   
                     <MenuTrigger
                         id="services-trigger"
                         controlsId="services-panel"
@@ -141,7 +142,7 @@ export default function SiteNavbar() {
                         }
                     />
 
-                    <span className="h-4 w-px bg-slate-200" aria-hidden />
+                    <span className="h-4 w-px bg-[color:var(--border)]" aria-hidden />
 
                     <MenuTrigger
                         id="aurillia-trigger"
@@ -155,24 +156,16 @@ export default function SiteNavbar() {
                         }
                     />
 
-                    {/* Contact pill stays as-is */}
-                    <Link
-                        href="/contact"
-                        className={`pill-accent text-sm ${pathname === "/contact"
-                            ? "ring-2 ring-orange-400/60"
-                            : ""
-                            }`}
-                    >
-                        Contact
+                    {/* Contact pill */}
+                    <Link href="/contact" className="pill-accent pill-gold text-sm">
+                    Contact
                     </Link>
                 </div>
 
-                {/* Mobile: theme / language + burger */}
+                {/* Mobile: burger */}
                 <div className="flex items-center gap-2 md:hidden">
-                    <ThemeToggle />
-                    <LanguageToggle compact />
                     <button
-                        className="relative z-50 inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 shadow-sm"
+                        className="relative z-50 inline-flex h-9 w-9 items-center justify-center rounded-md border border-[color:var(--border)] bg-[rgba(255,255,255,.03)] text-[color:var(--text)]"
                         aria-label="Toggle menu"
                         aria-expanded={mobileOpen}
                         onClick={() => {
@@ -241,35 +234,28 @@ export default function SiteNavbar() {
                 onClick={() => setMobileOpen(false)}
             />
             {/* Panel */}
-            <div
-                className={`fixed inset-x-0 top-16 bottom-0 z-50 border-t border-slate-200 bg-white transition-transform duration-300 md:hidden ${mobileOpen ? "translate-y-0" : "-translate-y-full"
-                    }`}
-            >
+                <div
+                className={`fixed inset-x-0 top-16 bottom-0 z-50 border-t border-[color:var(--border)] bg-[rgba(5,6,11,.96)] transition-transform duration-300 md:hidden ${
+                    mobileOpen ? "translate-y-0" : "-translate-y-full"
+                }`}
+                >
                 <div className="mx-auto flex h-full max-w-7xl flex-col overflow-y-auto overscroll-contain px-4 py-6">
                     <ul className="space-y-2">
-                        <MobileGroup
-                            title="Services"
-                            items={SERVICES}
-                            close={() => setMobileOpen(false)}
-                        />
-                        <MobileGroup
-                            title="Aurillia"
-                            items={AURILLIA}
-                            close={() => setMobileOpen(false)}
-                        />
+                    <MobileGroup title="Services" items={SERVICES} close={() => setMobileOpen(false)} />
+                    <MobileGroup title="Aurillia" items={AURILLIA} close={() => setMobileOpen(false)} />
                     </ul>
 
                     <div className="mt-6">
-                        <Link
-                            href="/contact"
-                            onClick={() => setMobileOpen(false)}
-                            className="inline-flex w-full items-center justify-center rounded-full bg-orange-600 px-4 py-3 text-base font-medium text-white shadow hover:bg-orange-500"
-                        >
-                            Contact
-                        </Link>
+                    <Link
+                        href="/contact"
+                        onClick={() => setMobileOpen(false)}
+                        className="inline-flex w-full items-center justify-center rounded-full bg-[color:var(--gold)] px-4 py-3 text-base font-semibold text-[#0A0B10] hover:brightness-[1.02]"
+                    >
+                        Contact
+                    </Link>
                     </div>
                 </div>
-            </div>
+                </div>
         </nav>
     );
 }
@@ -277,217 +263,204 @@ export default function SiteNavbar() {
 /* ---------- sub-components ---------- */
 
 function MenuTrigger({
-    label,
-    open,
-    onOpen,
-    onToggle,
-    id,
-    controlsId,
-    active,
+  label,
+  open,
+  onOpen,
+  onToggle,
+  id,
+  controlsId,
+  active,
 }: {
-    label: string;
-    open: boolean;
-    onOpen: () => void;
-    onToggle: () => void;
-    id: string;
-    controlsId: string;
-    active?: boolean;
+  label: string;
+  open: boolean;
+  onOpen: () => void;
+  onToggle: () => void;
+  id: string;
+  controlsId: string;
+  active?: boolean;
 }) {
-    const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onOpen();
-            const first = document
-                .getElementById(controlsId)
-                ?.querySelector<HTMLAnchorElement>('a[role="menuitem"]');
-            first?.focus();
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            onOpen();
-            const items = Array.from(
-                document
-                    .getElementById(controlsId)
-                    ?.querySelectorAll<HTMLAnchorElement>('a[role="menuitem"]') ??
-                []
-            );
-            items[items.length - 1]?.focus();
-        }
-    };
+  const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onOpen();
+      const first = document
+        .getElementById(controlsId)
+        ?.querySelector<HTMLAnchorElement>('a[role="menuitem"]');
+      first?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      onOpen();
+      const items = Array.from(
+        document
+          .getElementById(controlsId)
+          ?.querySelectorAll<HTMLAnchorElement>('a[role="menuitem"]') ?? []
+      );
+      items[items.length - 1]?.focus();
+    }
+  };
 
-    return (
-        <button
-            id={id}
-            aria-haspopup="menu"
-            aria-expanded={open}
-            aria-controls={controlsId}
-            className={`group inline-flex items-center gap-1 text-[0.94rem] font-medium ${open || active
-                ? "text-slate-900"
-                : "text-slate-600 hover:text-slate-900"
-                }`}
-            onMouseEnter={onOpen}
-            onFocus={onOpen}
-            onClick={onToggle}
-            onKeyDown={onKeyDown}
-            type="button"
-        >
-            {label}
-            <svg
-                className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""
-                    }`}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-            >
-                <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
-            </svg>
-        </button>
-    );
+  return (
+    <button
+      id={id}
+      aria-haspopup="menu"
+      aria-expanded={open}
+      aria-controls={controlsId}
+className={`group inline-flex items-center gap-1.5 text-[1rem] font-medium tracking-[0.01em] ${        open || active
+          ? "text-[color:var(--text)]"
+          : "text-[color:var(--muted)] hover:text-[color:var(--text)]"
+      }`}
+      onMouseEnter={onOpen}
+      onFocus={onOpen}
+      onClick={onToggle}
+      onKeyDown={onKeyDown}
+      type="button"
+    >
+      {label}
+      <svg
+        className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
+      </svg>
+    </button>
+  );
 }
+
 
 function MegaMenu({
-    open,
-    onClose,
-    heading,
-    items,
-    rightSlot,
-    panelId,
-    labelledById,
+  open,
+  onClose,
+  heading,
+  items,
+  rightSlot,
+  panelId,
+  labelledById,
 }: {
-    open: boolean;
-    onClose: () => void;
-    heading: string;
-    items: Item[];
-    rightSlot?: ReactNode;
-    panelId: string;
-    labelledById: string;
+  open: boolean;
+  onClose: () => void;
+  heading: string;
+  items: Item[];
+  rightSlot?: ReactNode;
+  panelId: string;
+  labelledById: string;
 }) {
-    const listRef = useRef<HTMLUListElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
-    useEffect(() => {
-        if (open) {
-            const first = listRef.current?.querySelector<HTMLAnchorElement>(
-                'a[role="menuitem"]'
-            );
-            first?.focus();
-        }
-    }, [open]);
+  useEffect(() => {
+    if (open) {
+      const first = listRef.current?.querySelector<HTMLAnchorElement>('a[role="menuitem"]');
+      first?.focus();
+    }
+  }, [open]);
 
-    const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === "Escape") {
-            e.preventDefault();
-            onClose();
-            return;
-        }
-        const itemsEls = Array.from(
-            listRef.current?.querySelectorAll<HTMLAnchorElement>(
-                'a[role="menuitem"]'
-            ) ?? []
-        );
-        if (!itemsEls.length) return;
-
-        const i = itemsEls.indexOf(document.activeElement as HTMLAnchorElement);
-        const focusAt = (idx: number) => itemsEls[idx]?.focus();
-
-        if (e.key === "ArrowDown") {
-            e.preventDefault();
-            focusAt((i + 1 + itemsEls.length) % itemsEls.length);
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            focusAt((i - 1 + itemsEls.length) % itemsEls.length);
-        } else if (e.key === "Home") {
-            e.preventDefault();
-            focusAt(0);
-        } else if (e.key === "End") {
-            e.preventDefault();
-            focusAt(itemsEls.length - 1);
-        } else if (e.key === "Tab") {
-            onClose();
-        }
-    };
-
-    return (
-        <div role="none" className="relative hidden md:block">
-            <div
-                id={panelId}
-                role="menu"
-                aria-labelledby={labelledById}
-                aria-hidden={!open}
-                onKeyDown={onKeyDown}
-                className={`absolute left-0 right-0 origin-top border-t border-slate-200 bg-white/97 shadow-md shadow-slate-200/70 transition-all duration-200 ${open
-                    ? "pointer-events-auto translate-y-0 opacity-100"
-                    : "pointer-events-none -translate-y-2 opacity-0"
-                    }`}
-            >
-                <div className="mx-auto grid max-w-7xl grid-cols-12 gap-8 px-6 py-8">
-                    {/* left: links */}
-                    <div className="col-span-8">
-                        <p className="mb-3 text-xs uppercase tracking-[0.22em] text-slate-500">
-                            {heading}
-                        </p>
-                        <ul
-                            ref={listRef}
-                            role="none"
-                            className="grid grid-cols-2 gap-2 lg:grid-cols-3"
-                        >
-                            {items.map((it) => (
-                                <li key={it.href} role="none">
-                                    <Link
-                                        href={it.href}
-                                        onClick={onClose}
-                                        role="menuitem"
-                                        tabIndex={open ? 0 : -1}
-                                        className="group block rounded-lg px-3 py-2 hover:bg-slate-50"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm font-medium text-slate-900 group-hover:text-slate-950">
-                                                {it.title}
-                                            </span>
-                                            <span
-                                                aria-hidden
-                                                className="text-slate-400 group-hover:text-slate-600"
-                                            >
-                                                ›
-                                            </span>
-                                        </div>
-                                        {it.description && (
-                                            <p className="mt-1 line-clamp-2 text-xs text-slate-500">
-                                                {it.description}
-                                            </p>
-                                        )}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* right: CTA / helper */}
-                    <div className="col-span-4">
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                            {rightSlot ?? (
-                                <>
-                                    <p className="text-sm font-medium text-slate-900">
-                                        Can’t find what you need?
-                                    </p>
-                                    <p className="mt-1 text-sm text-slate-600">
-                                        Send a short note and we&apos;ll work out the best
-                                        approach.
-                                    </p>
-                                    <Link
-                                        href="/contact"
-                                        onClick={onClose}
-                                        className="mt-4 inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-                                    >
-                                        hello@aurillia.de
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      onClose();
+      return;
+    }
+    const itemsEls = Array.from(
+      listRef.current?.querySelectorAll<HTMLAnchorElement>('a[role="menuitem"]') ?? []
     );
+    if (!itemsEls.length) return;
+
+    const i = itemsEls.indexOf(document.activeElement as HTMLAnchorElement);
+    const focusAt = (idx: number) => itemsEls[idx]?.focus();
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      focusAt((i + 1 + itemsEls.length) % itemsEls.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      focusAt((i - 1 + itemsEls.length) % itemsEls.length);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      focusAt(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      focusAt(itemsEls.length - 1);
+    } else if (e.key === "Tab") {
+      onClose();
+    }
+  };
+
+  return (
+    <div role="none" className="relative hidden md:block">
+      <div
+        id={panelId}
+        role="menu"
+        aria-labelledby={labelledById}
+        aria-hidden={!open}
+        onKeyDown={onKeyDown}
+        className={`absolute left-0 right-0 origin-top border-t nav-panel transition-all duration-200 ${
+          open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
+        }`}
+      >
+        <div className="mx-auto grid max-w-7xl grid-cols-12 gap-8 px-6 py-8">
+          {/* left: links */}
+          <div className="col-span-8">
+            <p className="mb-3 text-xs uppercase tracking-[0.22em] text-[color:var(--muted)]">
+              {heading}
+            </p>
+            <ul ref={listRef} role="none" className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+              {items.map((it) => (
+                <li key={it.href} role="none">
+                  <Link
+                    href={it.href}
+                    onClick={onClose}
+                    role="menuitem"
+                    tabIndex={open ? 0 : -1}
+                    className="group block rounded-lg px-3 py-2 nav-link"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-[color:var(--text)]">
+                        {it.title}
+                      </span>
+                      <span aria-hidden className="text-[color:var(--muted)] group-hover:text-[color:var(--text)]">
+                        ›
+                      </span>
+                    </div>
+                    {it.description && (
+                      <p className="mt-1 line-clamp-2 text-xs text-[color:var(--muted)]">
+                        {it.description}
+                      </p>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* right: CTA / helper */}
+          <div className="col-span-4">
+            <div className="rounded-2xl border p-5 nav-card">
+              {rightSlot ?? (
+                <>
+                  <p className="text-sm font-semibold text-[color:var(--text)]">
+                    Can’t find what you need?
+                  </p>
+                  <p className="mt-1 text-sm text-[color:var(--muted)]">
+                    Send a short note and we&apos;ll work out the best approach.
+                  </p>
+                  <Link
+                    href="/contact"
+                    onClick={onClose}
+                    className="mt-4 inline-flex items-center justify-center rounded-full bg-[color:var(--gold)] px-4 py-2 text-sm font-semibold text-[#0A0B10] hover:brightness-[1.02]"
+                  >
+                    hello@aurillia.de
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
 
 function AurilliaOverviewCard({ onClose }: { onClose: () => void }) {
     return (
@@ -533,116 +506,79 @@ function AurilliaOverviewCard({ onClose }: { onClose: () => void }) {
 }
 
 function MobileGroup({
-    title,
-    items,
-    close,
+  title,
+  items,
+  close,
 }: {
-    title: string;
-    items: Item[];
-    close: () => void;
+  title: string;
+  items: Item[];
+  close: () => void;
 }) {
-    const [open, setOpen] = useState(false);
-    return (
-        <li className="rounded-lg">
-            <button
-                className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-lg text-slate-900 hover:bg-slate-50"
-                onClick={() => setOpen((s) => !s)}
-                aria-expanded={open}
-                type="button"
-            >
-                {title}
-                <svg
-                    className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""
-                        }`}
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                >
-                    <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
-                </svg>
-            </button>
-            <ul
-                className={`grid overflow-hidden pl-2 transition-[grid-template-rows] ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                    }`}
-            >
-                <li className="min-h-0">
-                    <div className="space-y-1 pb-2 pt-1">
-                        {items.map((it) => (
-                            <Link
-                                key={it.href}
-                                href={it.href}
-                                onClick={close}
-                                className="block rounded-md px-2 py-2 text-base text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-                            >
-                                {it.title}
-                            </Link>
-                        ))}
-                    </div>
-                </li>
-            </ul>
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="rounded-lg border border-[color:var(--border)] bg-[rgba(255,255,255,.03)]">
+      <button
+        className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-base font-semibold text-[color:var(--text)] hover:bg-[rgba(255,255,255,.04)]"
+        onClick={() => setOpen((s) => !s)}
+        aria-expanded={open}
+        type="button"
+      >
+        {title}
+        <svg
+          className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
+        </svg>
+      </button>
+
+      <ul
+        className={`grid overflow-hidden px-3 transition-[grid-template-rows] ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <li className="min-h-0">
+          <div className="space-y-1 pb-3 pt-2">
+            {items.map((it) => (
+              <Link
+                key={it.href}
+                href={it.href}
+                onClick={close}
+                className="block rounded-md px-2 py-2 text-sm text-[color:var(--muted)] hover:bg-[rgba(255,255,255,.04)] hover:text-[color:var(--text)]"
+              >
+                {it.title}
+              </Link>
+            ))}
+          </div>
         </li>
-    );
+      </ul>
+    </li>
+  );
 }
+
 
 function Burger({ open }: { open: boolean }) {
-    return (
-        <span aria-hidden="true" className="relative block h-3.5 w-4">
-            <span
-                className={`absolute inset-x-0 top-0 h-0.5 origin-center bg-slate-800 transition-transform ${open ? "translate-y-1.5 rotate-45" : ""
-                    }`}
-            />
-            <span
-                className={`absolute inset-x-0 top-1.5 h-0.5 bg-slate-800 transition-opacity ${open ? "opacity-0" : ""
-                    }`}
-            />
-            <span
-                className={`absolute inset-x-0 top-3 h-0.5 origin-center bg-slate-800 transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""
-                    }`}
-            />
-        </span>
-    );
-}
-
-/** ---------- Language toggle (DE/EN) ---------- */
-function LanguageToggle({ compact = false }: { compact?: boolean }) {
-    const [lang, setLang] = useState<Locale>("de");
-
-    useEffect(() => {
-        const current = (document.documentElement.lang as Locale) || "de";
-        setLang(current);
-    }, []);
-
-    const setLocale = (next: Locale) => {
-        const oneYear = 60 * 60 * 24 * 365;
-        document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${oneYear}; samesite=lax`;
-        window.location.reload();
-    };
-
-    const Btn = ({ code, label }: { code: Locale; label: string }) => (
-        <button
-            type="button"
-            onClick={() => setLocale(code)}
-            aria-pressed={lang === code}
-            className={`inline-flex items-center justify-center rounded-md px-2.5 py-1 text-[0.72rem] font-medium ${lang === code
-                ? "bg-slate-900 text-white"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                }`}
-        >
-            {label}
-        </button>
-    );
-
-    return (
-        <div
-            className={`inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white/80 p-0.5 ${compact ? "" : "ml-1"
-                }`}
-            role="group"
-            aria-label="Select language"
-        >
-            <Btn code="de" label="DE" />
-            <Btn code="en" label="EN" />
-        </div>
-    );
+  return (
+    <span aria-hidden="true" className="relative block h-3.5 w-4">
+      <span
+        className={`absolute inset-x-0 top-0 h-0.5 origin-center bg-[color:var(--text)] transition-transform ${
+          open ? "translate-y-1.5 rotate-45" : ""
+        }`}
+      />
+      <span
+        className={`absolute inset-x-0 top-1.5 h-0.5 bg-[color:var(--text)] transition-opacity ${
+          open ? "opacity-0" : ""
+        }`}
+      />
+      <span
+        className={`absolute inset-x-0 top-3 h-0.5 origin-center bg-[color:var(--text)] transition-transform ${
+          open ? "-translate-y-1.5 -rotate-45" : ""
+        }`}
+      />
+    </span>
+  );
 }
 
 /** ---------- Mobile helpers ---------- */

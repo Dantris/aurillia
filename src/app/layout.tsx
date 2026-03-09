@@ -27,14 +27,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${poppins.variable} ${poppins.className} antialiased text-foreground bg-[#f5f5f6]`}
-      >
+className={`${poppins.variable} ${poppins.className} antialiased bg-[var(--bg)] text-[var(--text)]`}      >
         <I18nProvider locale={locale} dict={dict}>
           <AppThemeProvider>
             <SiteNavbar />
             {/* Reserve space for the fixed navbar (64/80px + safe area) */}
             <main
-              className="min-h-dvh bg-[#f5f5f6] pt-[calc(64px+env(safe-area-inset-top))] md:pt-[calc(80px+env(safe-area-inset-top))]"
             >
               {children}
               <AurilliaChatWidget />
