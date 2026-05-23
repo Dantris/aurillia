@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { getSupabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -13,9 +14,12 @@ const IP_RATE_LIMIT_MAX = Number(process.env.CONTACT_IP_RATE_LIMIT_MAX ?? 3);
 const IP_RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_IP_RATE_LIMIT_WINDOW_MS ?? 60 * 60_000);
 const EMAIL_RATE_LIMIT_MAX = Number(process.env.CONTACT_EMAIL_RATE_LIMIT_MAX ?? 1);
 const EMAIL_RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_EMAIL_RATE_LIMIT_WINDOW_MS ?? 10 * 60_000);
+const DUPLICATE_WINDOW_MS = Number(process.env.CONTACT_DUPLICATE_WINDOW_MS ?? 10 * 60_000);
 const MIN_FORM_AGE_MS = Number(process.env.CONTACT_MIN_FORM_AGE_MS ?? 2_500);
 const MAX_FORM_AGE_MS = Number(process.env.CONTACT_MAX_FORM_AGE_MS ?? 24 * 60 * 60 * 1_000);
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const TURNSTILE_ENABLED = Boolean(TURNSTILE_SECRET_KEY && TURNSTILE_SITE_KEY);
 
 const HONEYPOT_FIELDS = ["website", "phoneNumber", "homepage", "contactUrl"];
 const SPAM_PATTERNS = [
@@ -37,6 +41,7 @@ const ALLOWED_INTEREST = new Set([
 
 const ipBucket = new Map<string, number[]>();
 const emailBucket = new Map<string, number[]>();
+const duplicateBucket = new Map<string, number>();
 
 function getClientIp(req: Request) {
   const xff = req.headers.get("x-forwarded-for");
@@ -80,6 +85,25 @@ function hasObviousSpam(...values: string[]) {
   return SPAM_PATTERNS.some((pattern) => pattern.test(text));
 }
 
+function duplicateKey(email: string, message: string) {
+  return createHash("sha256")
+    .update(`${email}\n${message.toLowerCase().replace(/\s+/g, " ").trim()}`)
+    .digest("hex");
+}
+
+function isDuplicateSubmission(email: string, message: string) {
+  const now = Date.now();
+  const key = duplicateKey(email, message);
+  const lastSeen = duplicateBucket.get(key);
+
+  if (lastSeen && now - lastSeen < DUPLICATE_WINDOW_MS) {
+    return true;
+  }
+
+  duplicateBucket.set(key, now);
+  return false;
+}
+
 function shouldSilentlyDrop(form: FormData) {
   const filledTrap = HONEYPOT_FIELDS.some((field) =>
     String(form.get(field) || "").trim() !== "",
@@ -98,14 +122,14 @@ function shouldSilentlyDrop(form: FormData) {
 }
 
 async function verifyTurnstile(form: FormData, req: Request) {
-  if (!TURNSTILE_SECRET_KEY) return true;
+  if (!TURNSTILE_ENABLED) return true;
 
   const token = String(form.get("cf-turnstile-response") || "");
   if (!token) return false;
 
   try {
     const body = new URLSearchParams({
-      secret: TURNSTILE_SECRET_KEY,
+      secret: TURNSTILE_SECRET_KEY!,
       response: token,
       remoteip: getClientIp(req),
     });
@@ -300,6 +324,10 @@ export async function POST(req: Request) {
     }
 
     if (countUrls(message) > 3) {
+      return redirect(req, "?sent=1", locale);
+    }
+
+    if (isDuplicateSubmission(email, message)) {
       return redirect(req, "?sent=1", locale);
     }
 
