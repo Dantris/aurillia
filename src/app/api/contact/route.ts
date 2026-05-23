@@ -105,7 +105,10 @@ function formatLeadEmail(payload: LeadPayload) {
 }
 
 async function sendLeadEmail(payload: LeadPayload) {
-  if (!RESEND_API_KEY) return false;
+  if (!RESEND_API_KEY) {
+    console.error("CONTACT_EMAIL_DISABLED: Missing RESEND_API_KEY.");
+    return false;
+  }
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
@@ -237,7 +240,10 @@ export async function POST(req: Request) {
       storeLead(payload, projectSummary),
     ]);
 
-    if (!emailSent && !leadStored) {
+    if (!emailSent) {
+      if (leadStored) {
+        console.error("CONTACT_EMAIL_FAILED_LEAD_STORED: Email notification failed after lead storage.");
+      }
       return redirect(req, "?error=send", locale);
     }
 

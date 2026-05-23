@@ -31,7 +31,7 @@ const COPY = {
     errors: {
       invalid: "Bitte prüf Name, E-Mail und Nachricht. Die Nachricht sollte mindestens ein paar Sätze enthalten.",
       rate: "Es kamen gerade zu viele Nachrichten an. Versuch es in ein paar Minuten erneut.",
-      send: "Die Nachricht konnte gerade nicht gespeichert werden. Schreib uns bitte direkt per E-Mail.",
+      send: "Die Nachricht konnte gerade nicht per E-Mail weitergeleitet werden. Schreib uns bitte direkt per E-Mail.",
       generic: "Das Formular konnte gerade nicht verarbeitet werden. Schreib uns bitte direkt per E-Mail.",
     },
     formTitle: "Kurze Projektnotiz",
@@ -134,7 +134,7 @@ const COPY = {
     errors: {
       invalid: "Please check name, email, and message. The message should include a little context.",
       rate: "Too many messages arrived just now. Try again in a few minutes.",
-      send: "The message could not be saved right now. Please email us directly.",
+      send: "The message could not be forwarded by email right now. Please email us directly.",
       generic: "The form could not be processed right now. Please email us directly.",
     },
     formTitle: "Short project note",
