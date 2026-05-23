@@ -1,150 +1,249 @@
 import { NextResponse } from "next/server";
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-import { getContactConfig } from "@/lib/secrets";
+import { getSupabaseServer } from "@/lib/supabaseServer";
 
-/** Ensure Node runtime for AWS SDK */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/* ---------- Config (from env) ---------- */
-const AWS_REGION = process.env.AWS_REGION || "us-east-1";
-const CONTACT_TO = process.env.CONTACT_TO!;       // e.g. "inbox@yourdomain.com" (verified in SES)
-const CONTACT_FROM = process.env.CONTACT_FROM!;   // e.g. "no-reply@yourdomain.com" (verified)
-const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL || "").replace(/\/+$/, ""); // optional origin check
+const CONTACT_TO = process.env.CONTACT_TO || "devadacc@gmail.com";
+const CONTACT_FROM = process.env.CONTACT_FROM || "Aurillia <onboarding@resend.dev>";
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL || "").replace(/\/+$/, "");
 
-// simple rate-limit defaults (overridable via env)
 const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX ?? 5);
 const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS ?? 60_000);
 
-const ses = new SESClient({ region: AWS_REGION });
-
-/* ---------- Helpers ---------- */
-
 const ALLOWED_INTEREST = new Set([
-    "Web Development",
-    "Mobile Apps",
-    "Full-Stack Systems",
-    "Hardware & IoT",
-    "Cloud & AWS",
-    "AI & Automation",
+  "Web Development",
+  "Mobile Apps",
+  "AI Chatbot / Assistant",
+  "Website Care",
 ]);
 
+const bucket = new Map<string, number[]>();
+
 function getClientIp(req: Request) {
-    // best-effort; depends on hosting proxy
-    const xff = req.headers.get("x-forwarded-for");
-    if (xff) return xff.split(",")[0].trim();
-    return req.headers.get("x-real-ip") ?? "0.0.0.0";
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "0.0.0.0";
 }
 
-// naive in-memory rate limit bucket (fine for dev/small deploys)
-const bucket = new Map<string, number[]>();
 function checkRateLimit(ip: string) {
-    const now = Date.now();
-    const list = bucket.get(ip) ?? [];
-    const recent = list.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
-    if (recent.length >= RATE_LIMIT_MAX) return false;
-    recent.push(now);
-    bucket.set(ip, recent);
-    return true;
+  const now = Date.now();
+  const list = bucket.get(ip) ?? [];
+  const recent = list.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT_MAX) return false;
+  recent.push(now);
+  bucket.set(ip, recent);
+  return true;
 }
 
 function sanitize(input: string, max: number) {
-    // strip control chars, normalize whitespace, cap length
-    const s = input.replace(/[\u0000-\u001F\u007F]/g, "").replace(/\s+/g, " ").trim();
-    return s.slice(0, max);
+  return input
+    .replace(/[\u0000-\u001F\u007F]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
 }
 
 function isValidEmail(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function countUrls(text: string) {
-    return (text.match(/https?:\/\/|www\./gi) || []).length;
+  return (text.match(/https?:\/\/|www\./gi) || []).length;
 }
 
-function redirect(req: Request, q: string) {
-    return NextResponse.redirect(new URL(`/contact${q}`, req.url), { status: 303 });
+function originFromUrl(value: string | null) {
+  if (!value) return "";
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return "";
+  }
 }
 
-/* ---------- Handler ---------- */
+function isAllowedOrigin(req: Request) {
+  if (!APP_ORIGIN) return true;
+
+  const allowedOrigins = new Set([APP_ORIGIN, "https://www.aurillia.de"].filter(Boolean));
+  const origin = req.headers.get("origin")?.replace(/\/+$/, "") || "";
+  const refererOrigin = originFromUrl(req.headers.get("referer")).replace(/\/+$/, "");
+
+  if (origin && allowedOrigins.has(origin)) return true;
+  if (refererOrigin && allowedOrigins.has(refererOrigin)) return true;
+
+  return process.env.NODE_ENV !== "production" && !origin && !refererOrigin;
+}
+
+type LeadPayload = {
+  name: string;
+  email: string;
+  company: string;
+  projectUrl: string;
+  timeline: string;
+  interest: string;
+  message: string;
+};
+
+function formatLeadEmail(payload: LeadPayload) {
+  return [
+    "New Aurillia contact form submission",
+    "",
+    `Name: ${payload.name}`,
+    `Email: ${payload.email}`,
+    payload.company ? `Company: ${payload.company}` : null,
+    payload.projectUrl ? `Current website: ${payload.projectUrl}` : null,
+    payload.timeline ? `Timeline: ${payload.timeline}` : null,
+    `Interest: ${payload.interest}`,
+    "",
+    "Message:",
+    payload.message,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+async function sendLeadEmail(payload: LeadPayload) {
+  if (!RESEND_API_KEY) return false;
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: CONTACT_FROM,
+        to: [CONTACT_TO],
+        reply_to: payload.email,
+        subject: `Aurillia contact: ${payload.interest} - ${payload.name}`,
+        text: formatLeadEmail(payload),
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("CONTACT_EMAIL_ERROR:", response.status, await response.text());
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("CONTACT_EMAIL_SEND_ERROR:", error);
+    return false;
+  }
+}
+
+async function storeLead(payload: LeadPayload, projectSummary: string) {
+  const supabaseServer = getSupabaseServer();
+  if (!supabaseServer) return false;
+
+  try {
+    const { error } = await supabaseServer.from("leads").insert({
+      name: payload.name,
+      email: payload.email,
+      project_summary: projectSummary,
+      intent: payload.interest,
+      source: "contact_form",
+    });
+
+    if (error) {
+      console.error("CONTACT_SUPABASE_ERROR:", error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("CONTACT_SUPABASE_INSERT_ERROR:", error);
+    return false;
+  }
+}
+
+function getLocaleFromRequest(req: Request) {
+  const referer = req.headers.get("referer") || "";
+  try {
+    const url = new URL(referer);
+    return url.pathname.startsWith("/en") ? "en" : "de";
+  } catch {
+    return "de";
+  }
+}
+
+function redirect(req: Request, q: string, locale = getLocaleFromRequest(req)) {
+  const path = locale === "en" ? "/en/contact" : "/contact";
+  return NextResponse.redirect(new URL(`${path}${q}`, req.url), { status: 303 });
+}
 
 export async function POST(req: Request) {
-    try {
-        // Optional origin check (protects API from cross-site POSTs)
-        if (APP_ORIGIN) {
-            const origin = req.headers.get("origin") || "";
-            if (origin && !origin.startsWith(APP_ORIGIN)) {
-                return redirect(req, "?error=origin");
-            }
-        }
-
-        // Require multipart/form-data
-        const ctype = req.headers.get("content-type") || "";
-        if (!ctype.includes("multipart/form-data")) {
-            return redirect(req, "?error=format");
-        }
-
-        const ip = getClientIp(req);
-        if (!checkRateLimit(ip)) {
-            return redirect(req, "?error=rate");
-        }
-
-        const form = await req.formData();
-
-        // Honeypot — bots fill hidden fields; silently "succeed"
-        if (String(form.get("website") || "").trim() !== "") {
-            return redirect(req, "?sent=1");
-        }
-
-        // Extract + sanitize
-        const name = sanitize(String(form.get("name") || ""), 120);
-        const email = sanitize(String(form.get("email") || "").toLowerCase(), 200);
-        const company = sanitize(String(form.get("company") || ""), 120);
-        const interestRaw = String(form.get("interest") || "");
-        const interest = ALLOWED_INTEREST.has(interestRaw) ? interestRaw : "Other";
-        const message = sanitize(String(form.get("message") || ""), 4000);
-
-        // Basic validation
-        if (!name || !isValidEmail(email) || message.length < 10) {
-            return redirect(req, "?error=invalid");
-        }
-
-        // Simple spam heuristic
-        if (countUrls(message) > 3) {
-            // Treat as delivered, but drop.
-            return redirect(req, "?sent=1");
-        }
-
-        // Build email
-        const Subject = `New contact — ${name}`;
-        const BodyText = [
-            `Name: ${name}`,
-            `Email: ${email}`,
-            `Company: ${company || "-"}`,
-            `Interested in: ${interest}`,
-            "",
-            "Message:",
-            message,
-            "",
-            `IP: ${ip}`,
-        ].join("\n");
-
-        // Send via SES
-        await ses.send(
-            new SendEmailCommand({
-                Destination: { ToAddresses: [CONTACT_TO] },
-                Message: {
-                    Subject: { Data: Subject, Charset: "UTF-8" },
-                    Body: { Text: { Data: BodyText, Charset: "UTF-8" } },
-                },
-                Source: CONTACT_FROM,
-                ReplyToAddresses: [email],
-            })
-        );
-
-        return redirect(req, "?sent=1");
-    } catch (err) {
-        console.error("CONTACT_ERROR:", err);
-        return redirect(req, "?error=send");
+  try {
+    if (!isAllowedOrigin(req)) {
+      return redirect(req, "?error=origin");
     }
+
+    const ctype = req.headers.get("content-type") || "";
+    const canParseForm =
+      ctype.includes("multipart/form-data") ||
+      ctype.includes("application/x-www-form-urlencoded");
+
+    if (!canParseForm) {
+      return redirect(req, "?error=format");
+    }
+
+    const ip = getClientIp(req);
+    if (!checkRateLimit(ip)) {
+      return redirect(req, "?error=rate");
+    }
+
+    const form = await req.formData();
+    const locale = String(form.get("locale") || "") === "en" ? "en" : "de";
+
+    if (String(form.get("website") || "").trim() !== "") {
+      return redirect(req, "?sent=1", locale);
+    }
+
+    const name = sanitize(String(form.get("name") || ""), 120);
+    const email = sanitize(String(form.get("email") || "").toLowerCase(), 200);
+    const company = sanitize(String(form.get("company") || ""), 120);
+    const projectUrl = sanitize(String(form.get("projectUrl") || ""), 300);
+    const timeline = sanitize(String(form.get("timeline") || ""), 160);
+    const interestRaw = String(form.get("interest") || "");
+    const interest = ALLOWED_INTEREST.has(interestRaw) ? interestRaw : "Other";
+    const message = sanitize(String(form.get("message") || ""), 4000);
+
+    if (!name || !isValidEmail(email) || message.length < 10) {
+      return redirect(req, "?error=invalid", locale);
+    }
+
+    if (countUrls(message) > 3) {
+      return redirect(req, "?sent=1", locale);
+    }
+
+    const payload = { name, email, company, projectUrl, timeline, interest, message };
+    const projectSummary = [
+      company ? `Company: ${company}` : null,
+      projectUrl ? `Current website: ${projectUrl}` : null,
+      timeline ? `Timeline: ${timeline}` : null,
+      `Interested in: ${interest}`,
+      `Forward to: ${CONTACT_TO}`,
+      "",
+      message,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const [emailSent, leadStored] = await Promise.all([
+      sendLeadEmail(payload),
+      storeLead(payload, projectSummary),
+    ]);
+
+    if (!emailSent && !leadStored) {
+      return redirect(req, "?error=send", locale);
+    }
+
+    return redirect(req, "?sent=1", locale);
+  } catch (err) {
+    console.error("CONTACT_ERROR:", err);
+    return redirect(req, "?error=send");
+  }
 }

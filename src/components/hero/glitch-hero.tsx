@@ -1,15 +1,21 @@
-import { Share_Tech_Mono } from "next/font/google";
 import GlitchText from "./glitch-text";
 import styles from "./glitch-hero.module.css";
+import type { Locale } from "@/lib/i18n";
 
-const shareTechMono = Share_Tech_Mono({
-  subsets: ["latin"],
-  weight: "400",
-});
+const COPY: Record<Locale, { subtitle: string }> = {
+  de: {
+    subtitle: "Webentwicklung",
+  },
+  en: {
+    subtitle: "Web Development",
+  },
+};
 
-export default function GlitchHero() {
+export default function GlitchHero({ locale = "de" }: { locale?: Locale }) {
+  const copy = COPY[locale];
+
   return (
-    <main className={`${styles.page} ${shareTechMono.className}`}>
+    <main className={styles.page}>
       <div className={styles.scanlines} />
 
       <div className={`${styles.corner} ${styles.cornerTl}`} />
@@ -31,10 +37,8 @@ export default function GlitchHero() {
       </div>
 
       <div className={styles.subTitle}>
-        <GlitchText text="Web Development" delay={600} />
+        <GlitchText text={copy.subtitle} delay={600} />
       </div>
-
-      <p className={styles.tagline}>Scroll down for more</p>
     </main>
   );
 }
