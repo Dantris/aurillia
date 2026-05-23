@@ -11,6 +11,10 @@ const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL || "").replace(/\/+$/, "");
 
 const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX ?? 5);
 const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS ?? 60_000);
+const MIN_FORM_AGE_MS = Number(process.env.CONTACT_MIN_FORM_AGE_MS ?? 2_500);
+const MAX_FORM_AGE_MS = Number(process.env.CONTACT_MAX_FORM_AGE_MS ?? 24 * 60 * 60 * 1_000);
+
+const HONEYPOT_FIELDS = ["website", "phoneNumber", "homepage", "contactUrl"];
 
 const ALLOWED_INTEREST = new Set([
   "Web Development",
@@ -51,6 +55,23 @@ function isValidEmail(email: string) {
 
 function countUrls(text: string) {
   return (text.match(/https?:\/\/|www\./gi) || []).length;
+}
+
+function shouldSilentlyDrop(form: FormData) {
+  const filledTrap = HONEYPOT_FIELDS.some((field) =>
+    String(form.get(field) || "").trim() !== "",
+  );
+
+  if (filledTrap) return true;
+
+  const startedAt = Number(String(form.get("contactStartedAt") || ""));
+  const formAge = Date.now() - startedAt;
+
+  return (
+    !Number.isFinite(startedAt) ||
+    formAge < MIN_FORM_AGE_MS ||
+    formAge > MAX_FORM_AGE_MS
+  );
 }
 
 function originFromUrl(value: string | null) {
@@ -201,7 +222,7 @@ export async function POST(req: Request) {
     const form = await req.formData();
     const locale = String(form.get("locale") || "") === "en" ? "en" : "de";
 
-    if (String(form.get("website") || "").trim() !== "") {
+    if (shouldSilentlyDrop(form)) {
       return redirect(req, "?sent=1", locale);
     }
 

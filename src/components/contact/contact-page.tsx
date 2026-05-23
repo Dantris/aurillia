@@ -277,6 +277,7 @@ export default function ContactPageContent({
   selectedInterest,
 }: ContactPageProps) {
   const copy = COPY[locale];
+  const contactStartedAt = Date.now();
   const errorMessage = error
     ? copy.errors[error as keyof typeof copy.errors] ?? copy.errors.generic
     : null;
@@ -333,7 +334,25 @@ export default function ContactPageContent({
 
             <form action="/api/contact" method="POST" encType="multipart/form-data" className="contact-form-panel">
               <input type="hidden" name="locale" value={locale} />
-              <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+              <input type="hidden" name="contactStartedAt" value={contactStartedAt} />
+              <div className="pointer-events-none absolute -left-[10000px] top-auto h-px w-px overflow-hidden opacity-0" aria-hidden="true">
+                <label>
+                  Website
+                  <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                </label>
+                <label>
+                  Phone
+                  <input type="text" name="phoneNumber" tabIndex={-1} autoComplete="off" />
+                </label>
+                <label>
+                  Homepage
+                  <input type="text" name="homepage" tabIndex={-1} autoComplete="off" />
+                </label>
+                <label>
+                  Contact URL
+                  <input type="text" name="contactUrl" tabIndex={-1} autoComplete="off" />
+                </label>
+              </div>
 
               <div className="mb-7">
                 <p className="text-2xl font-semibold text-[var(--site-strong)]">{copy.formTitle}</p>
