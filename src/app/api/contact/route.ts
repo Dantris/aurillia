@@ -9,12 +9,24 @@ const CONTACT_FROM = process.env.CONTACT_FROM || "Aurillia <onboarding@resend.de
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL || "").replace(/\/+$/, "");
 
-const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX ?? 5);
-const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS ?? 60_000);
+const IP_RATE_LIMIT_MAX = Number(process.env.CONTACT_IP_RATE_LIMIT_MAX ?? 3);
+const IP_RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_IP_RATE_LIMIT_WINDOW_MS ?? 60 * 60_000);
+const EMAIL_RATE_LIMIT_MAX = Number(process.env.CONTACT_EMAIL_RATE_LIMIT_MAX ?? 1);
+const EMAIL_RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_EMAIL_RATE_LIMIT_WINDOW_MS ?? 10 * 60_000);
 const MIN_FORM_AGE_MS = Number(process.env.CONTACT_MIN_FORM_AGE_MS ?? 2_500);
 const MAX_FORM_AGE_MS = Number(process.env.CONTACT_MAX_FORM_AGE_MS ?? 24 * 60 * 60 * 1_000);
+const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 
 const HONEYPOT_FIELDS = ["website", "phoneNumber", "homepage", "contactUrl"];
+const SPAM_PATTERNS = [
+  /\bbtc\b/i,
+  /\bbitcoin\b/i,
+  /\btelegram\b/i,
+  /\bcrypto(?:currency)?\b/i,
+  /\bearnings?\b/i,
+  /\breservation\s*id\b/i,
+  /\burgent\s+message\b/i,
+];
 
 const ALLOWED_INTEREST = new Set([
   "Web Development",
@@ -23,7 +35,8 @@ const ALLOWED_INTEREST = new Set([
   "Website Care",
 ]);
 
-const bucket = new Map<string, number[]>();
+const ipBucket = new Map<string, number[]>();
+const emailBucket = new Map<string, number[]>();
 
 function getClientIp(req: Request) {
   const xff = req.headers.get("x-forwarded-for");
@@ -31,13 +44,18 @@ function getClientIp(req: Request) {
   return req.headers.get("x-real-ip") ?? "0.0.0.0";
 }
 
-function checkRateLimit(ip: string) {
+function checkRateLimit(
+  bucket: Map<string, number[]>,
+  key: string,
+  max: number,
+  windowMs: number,
+) {
   const now = Date.now();
-  const list = bucket.get(ip) ?? [];
-  const recent = list.filter((ts) => now - ts < RATE_LIMIT_WINDOW_MS);
-  if (recent.length >= RATE_LIMIT_MAX) return false;
+  const list = bucket.get(key) ?? [];
+  const recent = list.filter((ts) => now - ts < windowMs);
+  if (recent.length >= max) return false;
   recent.push(now);
-  bucket.set(ip, recent);
+  bucket.set(key, recent);
   return true;
 }
 
@@ -57,6 +75,11 @@ function countUrls(text: string) {
   return (text.match(/https?:\/\/|www\./gi) || []).length;
 }
 
+function hasObviousSpam(...values: string[]) {
+  const text = values.join(" \n ");
+  return SPAM_PATTERNS.some((pattern) => pattern.test(text));
+}
+
 function shouldSilentlyDrop(form: FormData) {
   const filledTrap = HONEYPOT_FIELDS.some((field) =>
     String(form.get(field) || "").trim() !== "",
@@ -72,6 +95,40 @@ function shouldSilentlyDrop(form: FormData) {
     formAge < MIN_FORM_AGE_MS ||
     formAge > MAX_FORM_AGE_MS
   );
+}
+
+async function verifyTurnstile(form: FormData, req: Request) {
+  if (!TURNSTILE_SECRET_KEY) return true;
+
+  const token = String(form.get("cf-turnstile-response") || "");
+  if (!token) return false;
+
+  try {
+    const body = new URLSearchParams({
+      secret: TURNSTILE_SECRET_KEY,
+      response: token,
+      remoteip: getClientIp(req),
+    });
+
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body,
+    });
+
+    const result = (await response.json()) as { success?: boolean; "error-codes"?: string[] };
+
+    if (!result.success) {
+      console.error("CONTACT_TURNSTILE_ERROR:", result["error-codes"] ?? []);
+    }
+
+    return result.success === true;
+  } catch (error) {
+    console.error("CONTACT_TURNSTILE_VERIFY_ERROR:", error);
+    return false;
+  }
 }
 
 function originFromUrl(value: string | null) {
@@ -214,16 +271,15 @@ export async function POST(req: Request) {
       return redirect(req, "?error=format");
     }
 
-    const ip = getClientIp(req);
-    if (!checkRateLimit(ip)) {
-      return redirect(req, "?error=rate");
-    }
-
     const form = await req.formData();
     const locale = String(form.get("locale") || "") === "en" ? "en" : "de";
 
     if (shouldSilentlyDrop(form)) {
       return redirect(req, "?sent=1", locale);
+    }
+
+    if (!(await verifyTurnstile(form, req))) {
+      return redirect(req, "?error=turnstile", locale);
     }
 
     const name = sanitize(String(form.get("name") || ""), 120);
@@ -239,8 +295,21 @@ export async function POST(req: Request) {
       return redirect(req, "?error=invalid", locale);
     }
 
+    if (hasObviousSpam(name, email, company, projectUrl, timeline, message)) {
+      return redirect(req, "?sent=1", locale);
+    }
+
     if (countUrls(message) > 3) {
       return redirect(req, "?sent=1", locale);
+    }
+
+    const ip = getClientIp(req);
+    if (!checkRateLimit(ipBucket, ip, IP_RATE_LIMIT_MAX, IP_RATE_LIMIT_WINDOW_MS)) {
+      return redirect(req, "?error=rate", locale);
+    }
+
+    if (!checkRateLimit(emailBucket, email, EMAIL_RATE_LIMIT_MAX, EMAIL_RATE_LIMIT_WINDOW_MS)) {
+      return redirect(req, "?error=rate", locale);
     }
 
     const payload = { name, email, company, projectUrl, timeline, interest, message };

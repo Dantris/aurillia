@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n";
 import SiteFooter from "@/components/navigation/site-footer";
+import Script from "next/script";
 
 type ContactPageProps = {
   locale: Locale;
@@ -7,6 +8,7 @@ type ContactPageProps = {
   error?: string | null;
   contactEmail: string;
   selectedInterest?: string | null;
+  turnstileSiteKey?: string;
 };
 
 type ContactOption = {
@@ -32,6 +34,7 @@ const COPY = {
       invalid: "Bitte prüf Name, E-Mail und Nachricht. Die Nachricht sollte mindestens ein paar Sätze enthalten.",
       rate: "Es kamen gerade zu viele Nachrichten an. Versuch es in ein paar Minuten erneut.",
       send: "Die Nachricht konnte gerade nicht per E-Mail weitergeleitet werden. Schreib uns bitte direkt per E-Mail.",
+      turnstile: "Die Sicherheitsprüfung ist abgelaufen. Bitte lade die Seite neu und versuch es noch einmal.",
       generic: "Das Formular konnte gerade nicht verarbeitet werden. Schreib uns bitte direkt per E-Mail.",
     },
     formTitle: "Kurze Projektnotiz",
@@ -135,6 +138,7 @@ const COPY = {
       invalid: "Please check name, email, and message. The message should include a little context.",
       rate: "Too many messages arrived just now. Try again in a few minutes.",
       send: "The message could not be forwarded by email right now. Please email us directly.",
+      turnstile: "The security check expired. Please reload the page and try again.",
       generic: "The form could not be processed right now. Please email us directly.",
     },
     formTitle: "Short project note",
@@ -238,6 +242,7 @@ const COPY = {
       invalid: string;
       rate: string;
       send: string;
+      turnstile: string;
       generic: string;
     };
     formTitle: string;
@@ -275,6 +280,7 @@ export default function ContactPageContent({
   error,
   contactEmail,
   selectedInterest,
+  turnstileSiteKey,
 }: ContactPageProps) {
   const copy = COPY[locale];
   const contactStartedAt = Date.now();
@@ -287,6 +293,9 @@ export default function ContactPageContent({
 
   return (
     <>
+    {turnstileSiteKey ? (
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" async defer />
+    ) : null}
     <main className="min-h-screen text-[var(--site-text)]">
       <section className="relative overflow-hidden border-b border-[var(--site-line)]">
         <div className="pointer-events-none absolute inset-0 [background:var(--site-contact-wash)]" />
@@ -388,6 +397,16 @@ export default function ContactPageContent({
                   placeholder={copy.messagePlaceholder}
                 />
               </Field>
+
+              {turnstileSiteKey ? (
+                <div className="mt-5">
+                  <div
+                    className="cf-turnstile"
+                    data-sitekey={turnstileSiteKey}
+                    data-theme="auto"
+                  />
+                </div>
+              ) : null}
 
               <div className="mt-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div className="text-base leading-7 text-[var(--site-muted)]">

@@ -6,6 +6,7 @@ import { contactPageJsonLd, metadataForPage } from "@/lib/seo";
 export const metadata: Metadata = metadataForPage("en", "contact");
 
 const PUBLIC_CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@aurillia.de";
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -31,6 +32,7 @@ export default async function ContactPage({
         error={error}
         contactEmail={PUBLIC_CONTACT_EMAIL}
         selectedInterest={selectedInterest}
+        turnstileSiteKey={TURNSTILE_SITE_KEY}
       />
     </>
   );
