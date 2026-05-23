@@ -38,17 +38,19 @@ const COPY = {
     formIntro:
       "Je konkreter du die aktuelle Situation beschreibst, desto nützlicher können wir antworten.",
     name: "Name",
+    namePlaceholder: "Vorname und Nachname",
     email: "E-Mail",
+    emailPlaceholder: "name@unternehmen.de",
     company: "Unternehmen",
-    companyPlaceholder: "Unternehmen oder Projekt",
+    companyPlaceholder: "Unternehmen, Praxis oder Marke",
     website: "Aktuelle Website",
-    websitePlaceholder: "https://...",
+    websitePlaceholder: "https://deine-domain.de",
     timeline: "Zeitplan",
-    timelinePlaceholder: "z.B. Launch in 6-8 Wochen",
+    timelinePlaceholder: "z.B. Relaunch vor dem Quartalsstart",
     projectType: "Projektart",
     message: "Nachricht",
     messagePlaceholder:
-      "Was möchtest du bauen oder verbessern? Links, Ziele, Zeitplan und Erfolgskriterien helfen sehr.",
+      "Was passt aktuell nicht, was soll sich ändern und welche Seiten oder Angebote sind besonders wichtig?",
     formNote:
       "Kein Sales-Skript. Wir antworten mit nützlicher Richtung oder sagen ehrlich, wenn es nicht passt.",
     submit: "Projektnotiz senden",
@@ -139,17 +141,19 @@ const COPY = {
     formIntro:
       "The more concrete the current situation is, the more useful our first reply can be.",
     name: "Name",
+    namePlaceholder: "First and last name",
     email: "Email",
+    emailPlaceholder: "name@company.com",
     company: "Company",
-    companyPlaceholder: "Company or project",
+    companyPlaceholder: "Company, practice, or brand",
     website: "Current website",
-    websitePlaceholder: "https://...",
+    websitePlaceholder: "https://your-domain.com",
     timeline: "Timeline",
-    timelinePlaceholder: "e.g. launch in 6-8 weeks",
+    timelinePlaceholder: "e.g. relaunch before next quarter",
     projectType: "Project type",
     message: "Message",
     messagePlaceholder:
-      "What are you trying to build or improve? Include links, goals, timeline, and what would make the project successful.",
+      "What is not working right now, what should change, and which pages or offers matter most?",
     formNote:
       "No sales script. We will reply with useful direction or tell you if it is not a fit.",
     submit: "Send project note",
@@ -239,7 +243,9 @@ const COPY = {
     formTitle: string;
     formIntro: string;
     name: string;
+    namePlaceholder: string;
     email: string;
+    emailPlaceholder: string;
     company: string;
     companyPlaceholder: string;
     website: string;
@@ -336,10 +342,10 @@ export default function ContactPageContent({
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <Field label={copy.name} htmlFor="name">
-                  <input id="name" name="name" required className="contact-field" placeholder="Jane Doe" />
+                  <input id="name" name="name" required className="contact-field" placeholder={copy.namePlaceholder} />
                 </Field>
                 <Field label={copy.email} htmlFor="email">
-                  <input id="email" name="email" type="email" required className="contact-field" placeholder="you@company.com" />
+                  <input id="email" name="email" type="email" required className="contact-field" placeholder={copy.emailPlaceholder} />
                 </Field>
                 <Field label={copy.company} htmlFor="company">
                   <input id="company" name="company" className="contact-field" placeholder={copy.companyPlaceholder} />
