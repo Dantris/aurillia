@@ -21,7 +21,7 @@ const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const TURNSTILE_ENABLED = Boolean(TURNSTILE_SECRET_KEY && TURNSTILE_SITE_KEY);
 
-const HONEYPOT_FIELDS = ["website", "phoneNumber", "homepage", "contactUrl"];
+const HONEYPOT_FIELDS = ["aurillia_extra_field", "aurillia_confirm_code"];
 const SPAM_PATTERNS = [
   /\bbtc\b/i,
   /\bbitcoin\b/i,

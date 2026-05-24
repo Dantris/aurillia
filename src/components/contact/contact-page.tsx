@@ -344,23 +344,19 @@ export default function ContactPageContent({
             <form action="/api/contact" method="POST" encType="multipart/form-data" className="contact-form-panel">
               <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="contactStartedAt" value={contactStartedAt} />
-              <div className="pointer-events-none absolute -left-[10000px] top-auto h-px w-px overflow-hidden opacity-0" aria-hidden="true">
-                <label>
-                  Website
-                  <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-                </label>
-                <label>
-                  Phone
-                  <input type="text" name="phoneNumber" tabIndex={-1} autoComplete="off" />
-                </label>
-                <label>
-                  Homepage
-                  <input type="text" name="homepage" tabIndex={-1} autoComplete="off" />
-                </label>
-                <label>
-                  Contact URL
-                  <input type="text" name="contactUrl" tabIndex={-1} autoComplete="off" />
-                </label>
+              <div className="hidden" aria-hidden="true">
+                <input
+                  type="text"
+                  name="aurillia_extra_field"
+                  tabIndex={-1}
+                  autoComplete="new-password"
+                />
+                <input
+                  type="text"
+                  name="aurillia_confirm_code"
+                  tabIndex={-1}
+                  autoComplete="new-password"
+                />
               </div>
 
               <div className="mb-7">
