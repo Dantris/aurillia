@@ -23,4 +23,4 @@ Environment values live in `.env.local`.
 
 - `OPENAI_API_KEY` powers the chat assistant.
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` store leads and assistant usage.
-- `CONTACT_TO` is the public contact inbox shown on the contact page, for example `hello@aurillia.de`.
+- `CONTACT_TO` is the private inbox that receives contact form notifications, for example `info@aurillia.de`.

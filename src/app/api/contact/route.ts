@@ -5,7 +5,7 @@ import { getSupabaseServer } from "@/lib/supabaseServer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const CONTACT_TO = process.env.CONTACT_TO || "devadacc@gmail.com";
+const CONTACT_TO = process.env.CONTACT_TO || "info@aurillia.de";
 const CONTACT_FROM = process.env.CONTACT_FROM || "Aurillia <onboarding@resend.dev>";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_URL || "").replace(/\/+$/, "");
