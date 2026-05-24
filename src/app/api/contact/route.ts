@@ -104,21 +104,21 @@ function isDuplicateSubmission(email: string, message: string) {
   return false;
 }
 
-function shouldSilentlyDrop(form: FormData) {
+function getSilentDropReason(form: FormData) {
   const filledTrap = HONEYPOT_FIELDS.some((field) =>
     String(form.get(field) || "").trim() !== "",
   );
 
-  if (filledTrap) return true;
+  if (filledTrap) return "honeypot";
 
   const startedAt = Number(String(form.get("contactStartedAt") || ""));
   const formAge = Date.now() - startedAt;
 
-  return (
-    !Number.isFinite(startedAt) ||
-    formAge < MIN_FORM_AGE_MS ||
-    formAge > MAX_FORM_AGE_MS
-  );
+  if (!Number.isFinite(startedAt)) return "missing_timestamp";
+  if (formAge < MIN_FORM_AGE_MS) return "too_fast";
+  if (formAge > MAX_FORM_AGE_MS) return "stale_timestamp";
+
+  return "";
 }
 
 async function verifyTurnstile(form: FormData, req: Request) {
@@ -233,6 +233,13 @@ async function sendLeadEmail(payload: LeadPayload) {
       return false;
     }
 
+    const result = (await response.json().catch(() => null)) as { id?: string } | null;
+    console.info("CONTACT_EMAIL_SENT:", {
+      from: CONTACT_FROM,
+      to: CONTACT_TO,
+      resendId: result?.id ?? "unknown",
+    });
+
     return true;
   } catch (error) {
     console.error("CONTACT_EMAIL_SEND_ERROR:", error);
@@ -298,7 +305,9 @@ export async function POST(req: Request) {
     const form = await req.formData();
     const locale = String(form.get("locale") || "") === "en" ? "en" : "de";
 
-    if (shouldSilentlyDrop(form)) {
+    const silentDropReason = getSilentDropReason(form);
+    if (silentDropReason) {
+      console.info("CONTACT_SILENT_DROP:", silentDropReason);
       return redirect(req, "?sent=1", locale);
     }
 
@@ -320,14 +329,17 @@ export async function POST(req: Request) {
     }
 
     if (hasObviousSpam(name, email, company, projectUrl, timeline, message)) {
+      console.info("CONTACT_SILENT_DROP:", "spam_keyword");
       return redirect(req, "?sent=1", locale);
     }
 
     if (countUrls(message) > 3) {
+      console.info("CONTACT_SILENT_DROP:", "too_many_urls");
       return redirect(req, "?sent=1", locale);
     }
 
     if (isDuplicateSubmission(email, message)) {
+      console.info("CONTACT_SILENT_DROP:", "duplicate");
       return redirect(req, "?sent=1", locale);
     }
 
