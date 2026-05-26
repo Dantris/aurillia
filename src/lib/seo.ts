@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { Locale } from "@/lib/i18n";
+import { legalConfig } from "@/lib/legal";
 
 export type SeoPageId = "home" | "contact" | "web" | "mobile" | "impressum" | "datenschutz";
 
@@ -23,7 +24,8 @@ export const seoConfig = {
   name: "Aurillia",
   siteUrl,
   metadataBase: new URL(siteUrl),
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@aurillia.de",
+  contactEmail: legalConfig.email,
+  contactPhone: legalConfig.phone,
   defaultLocale: "de" as Locale,
   ogImage: "/opengraph-image",
   organizationId: `${siteUrl}/#organization`,
@@ -205,9 +207,11 @@ export function siteJsonLd() {
         url: seoConfig.siteUrl,
         logo: absoluteUrl("/icon.svg"),
         email: seoConfig.contactEmail,
+        telephone: seoConfig.contactPhone || undefined,
         contactPoint: {
           "@type": "ContactPoint",
           email: seoConfig.contactEmail,
+          telephone: seoConfig.contactPhone || undefined,
           contactType: "customer support",
           availableLanguage: ["de", "en"],
         },
@@ -289,6 +293,7 @@ export function contactPageJsonLd(locale: Locale) {
         "@type": "ContactPoint",
         "@id": `${absoluteUrl(seoPages[locale].contact.path)}#contact`,
         email: seoConfig.contactEmail,
+        telephone: seoConfig.contactPhone || undefined,
         contactType: "customer support",
         availableLanguage: ["de", "en"],
         areaServed: locale === "de" ? "DE" : "Worldwide",

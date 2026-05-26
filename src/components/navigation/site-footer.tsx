@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { localizedPath, type Locale } from "@/lib/i18n";
+import { hasLegalPhone, legalConfig, legalPhoneHref } from "@/lib/legal";
 
 const FOOTER_COPY = {
   de: {
@@ -26,7 +27,6 @@ const FOOTER_COPY = {
       ["Impressum", "/impressum"],
       ["Datenschutz", "/datenschutz"],
     ] as const,
-    email: "info@aurillia.de",
   },
   en: {
     description:
@@ -51,7 +51,6 @@ const FOOTER_COPY = {
       ["Imprint", "/impressum"],
       ["Privacy", "/datenschutz"],
     ] as const,
-    email: "info@aurillia.de",
   },
 } satisfies Record<
   Locale,
@@ -69,7 +68,6 @@ const FOOTER_COPY = {
     companyItems: string[];
     legalTitle: string;
     legalLinks: readonly (readonly [string, string])[];
-    email: string;
   }
 >;
 
@@ -128,7 +126,21 @@ export default function SiteFooter({ locale = "de" }: { locale?: Locale }) {
 
       <div className="border-t border-[var(--site-line)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-sm leading-6 text-[var(--site-muted)] md:flex-row md:items-center md:justify-between md:px-10">
-          <p>© {new Date().getFullYear()} Aurillia. {copy.email}</p>
+          <p>
+            © {new Date().getFullYear()} Aurillia.{" "}
+            <a className="footer-link" href={`mailto:${legalConfig.email}`}>
+              {legalConfig.email}
+            </a>
+            {hasLegalPhone ? (
+              <>
+                {" "}
+                ·{" "}
+                <a className="footer-link" href={legalPhoneHref()}>
+                  {legalConfig.phone}
+                </a>
+              </>
+            ) : null}
+          </p>
           <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label={copy.legalTitle}>
             {copy.legalLinks.map(([label, href]) => (
               <Link key={href} href={localizedPath(href, locale)} className="footer-link">
