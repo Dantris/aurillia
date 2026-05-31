@@ -198,7 +198,7 @@ export default function SiteNavbar() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-[76px] sm:px-6 md:h-[86px] md:px-10">
           <Link href={localizedPath("/", locale)} className="flex min-w-0 items-center gap-2 text-[var(--site-strong)] sm:gap-3">
-            <img src="/icon.svg" alt="Aurillia" className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" aria-hidden="true" />
+            <img src="/icon.svg" alt="" className="h-7 w-auto shrink-0 sm:h-8" aria-hidden="true" />
             <span className="truncate text-[1rem] font-semibold tracking-[0.07em] sm:text-[1.08rem] md:text-[1.18rem]">
               AURILLIA
             </span>

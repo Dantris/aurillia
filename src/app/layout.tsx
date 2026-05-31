@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   robots: indexableRobots,
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "256x256" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", type: "image/svg+xml", sizes: "any" },
     ],
+    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
   formatDetection: {
     email: false,
