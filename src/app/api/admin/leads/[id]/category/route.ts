@@ -19,9 +19,10 @@ interface Body {
 
 export async function POST(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const { category } = (await req.json()) as Body;
 
         if (category !== null && !ALLOWED_CATEGORIES.includes(category)) {
@@ -31,7 +32,7 @@ export async function POST(
         const { error } = await supabaseServer
             .from("leads")
             .update({ service_category: category })
-            .eq("id", params.id);
+            .eq("id", id);
 
         if (error) {
             console.error("Update lead category error:", error);

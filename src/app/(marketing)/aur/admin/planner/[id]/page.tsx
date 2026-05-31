@@ -2,16 +2,17 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import { ApartmentPlanner, Room } from "@/components/ApartmentPlanner";
 
 interface Props {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function PlannerAdminDetailPage({ params }: Props) {
+    const { id } = await params;
     const { data, error } = await supabaseServer
         .from("aur_planner_submissions")
         .select(
             "id, created_at, contact_name, contact_email, notes, rooms, widget_totals, status"
         )
-        .eq("id", params.id)
+        .eq("id", id)
         .single();
 
     if (error || !data) {
