@@ -4,13 +4,13 @@ import StructuredData from "@/components/seo/structured-data";
 import { servicePages } from "@/lib/service-content";
 import { metadataForPage, servicePageJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = metadataForPage("de", "mobile");
+export const metadata: Metadata = metadataForPage("en", "web");
 
-export default function MobileAppsPage() {
+export default function WebDevelopmentPage() {
   return (
     <>
-      <StructuredData data={servicePageJsonLd("de", "mobile", servicePages.de.mobile)} />
-      <ServicePage locale="de" {...servicePages.de.mobile} />
+      <StructuredData data={servicePageJsonLd("en", "web", servicePages.en.web)} />
+      <ServicePage locale="en" {...servicePages.en.web} />
     </>
   );
 }

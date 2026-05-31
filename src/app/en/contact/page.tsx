@@ -3,7 +3,7 @@ import ContactPageContent from "@/components/contact/contact-page";
 import StructuredData from "@/components/seo/structured-data";
 import { contactPageJsonLd, metadataForPage } from "@/lib/seo";
 
-export const metadata: Metadata = metadataForPage("de", "contact");
+export const metadata: Metadata = metadataForPage("en", "contact");
 
 const PUBLIC_CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@aurillia.de";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
@@ -25,9 +25,9 @@ export default async function ContactPage({
 
   return (
     <>
-      <StructuredData data={contactPageJsonLd("de")} />
+      <StructuredData data={contactPageJsonLd("en")} />
       <ContactPageContent
-        locale="de"
+        locale="en"
         sent={sent}
         error={error}
         contactEmail={PUBLIC_CONTACT_EMAIL}
