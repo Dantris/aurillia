@@ -36,27 +36,27 @@ export const seoPages: Record<Locale, Record<SeoPageId, SeoPage>> = {
   de: {
     home: {
       path: "/",
-      title: "Aurillia - Webentwicklung für klare Unternehmenswebsites",
+      title: "Aurillia - Webentwicklung für klare Unternehmensseiten",
       description:
-        "Aurillia entwickelt moderne Websites, Leistungsseiten und Websysteme für Unternehmen, die verständlicher auftreten und bessere Anfragen bekommen wollen.",
+        "Aurillia entwickelt Websites, Leistungsseiten und Websysteme, die Angebote klarer erklären und bessere Anfragen vorbereiten.",
     },
     contact: {
       path: "/contact",
       title: "Kontakt - Website-Projekt mit Aurillia starten",
       description:
-        "Schick uns deine aktuelle Website, Ziele und offene Fragen. Aurillia meldet sich mit einer ehrlichen Einschätzung für Website, Mobile App oder KI-Assistent.",
+        "Schickt uns eure aktuelle Website, Ziele und offene Fragen. Aurillia meldet sich mit einer ehrlichen Einschätzung für Website, App oder KI-Assistent.",
     },
     web: {
       path: "/services/web",
       title: "Webentwicklung für Unternehmen - Aurillia",
       description:
-        "Website veraltet, unklar oder schwer zu pflegen? Aurillia plant, schreibt und baut Unternehmenswebsites mit klarer Struktur, SEO-Basics und sauberem Next.js-Fundament.",
+        "Website veraltet, unklar oder schwer zu pflegen? Aurillia plant, schreibt und baut Unternehmensseiten mit klarer Struktur, SEO-Basics und sauberem Next.js-Fundament.",
     },
     mobile: {
       path: "/services/mobile",
       title: "Mobile Apps und PWA für Unternehmen - Aurillia",
       description:
-        "Aurillia baut fokussierte mobile Apps und PWAs für Teams, Kunden und interne Abläufe, wenn Web allein nicht mehr reicht.",
+        "Aurillia baut fokussierte Apps und PWAs für Teams, Kunden und interne Abläufe, wenn der Browser allein zu umständlich wird.",
     },
     impressum: {
       path: "/impressum",
@@ -321,10 +321,10 @@ export function servicePageJsonLd(
   const serviceType =
     id === "web"
       ? locale === "de"
-        ? "Webentwicklung und Website Relaunch"
+        ? "Webentwicklung und Website-Relaunch"
         : "Web development and website relaunch"
       : locale === "de"
-        ? "Mobile App Entwicklung und PWA"
+        ? "Mobile-App-Entwicklung und PWA"
         : "Mobile app development and PWA";
 
   return {

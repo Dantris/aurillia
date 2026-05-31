@@ -42,20 +42,20 @@ const PRIVACY_SECTIONS: Record<Locale, Section[]> = {
       title: "3. Kontaktformular und Projektanfragen",
       body: [
         "Wenn du das Kontaktformular nutzt oder uns per E-Mail oder Telefon kontaktierst, verarbeiten wir die von dir übermittelten Daten, insbesondere Name, E-Mail-Adresse, Telefonnummer, Unternehmen, aktuelle Website, Zeitplan, Projektart und Nachricht.",
-        "Die Daten werden verwendet, um deine Anfrage zu beantworten, ein mögliches Projekt einzuschätzen, Rückfragen zu stellen und die Kommunikation dazu zu führen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf eine Beauftragung gerichtet ist, sonst Art. 6 Abs. 1 lit. f DSGVO.",
+        "Wir verwenden diese Daten, um deine Anfrage zu beantworten, ein mögliches Projekt einzuschätzen, Rückfragen zu stellen und dazu mit dir zu kommunizieren. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf eine Beauftragung gerichtet ist, ansonsten Art. 6 Abs. 1 lit. f DSGVO.",
       ],
     },
     {
       title: "4. Speicherung von Leads und Nutzungsdaten über Supabase",
       body: [
         "Projektanfragen und freiwillig übermittelte Kontaktdaten können in Supabase gespeichert werden, damit Anfragen nachvollziehbar bearbeitet werden können.",
-        "Beim optionalen KI-Assistenten können zusätzlich technische Nutzungsdaten wie Zeitpunkt, grobe Anfrageart, Token-Nutzung und ein pseudonymisierter Fingerprint zur Missbrauchsbegrenzung und Kostenkontrolle protokolliert werden.",
+        "Beim optionalen KI-Assistenten können zusätzlich technische Nutzungsdaten wie Zeitpunkt, grobe Anfrageart, Token-Nutzung und ein pseudonymisierter Fingerprint protokolliert werden, um Missbrauch zu begrenzen und Kosten zu kontrollieren.",
       ],
     },
     {
       title: "5. Optionaler KI-Assistent über OpenAI",
       body: [
-        "Der Chat-Assistent ist ein freiwilliges Angebot zur ersten Projekteinschätzung. Wenn er aktiviert ist, werden deine Chatnachrichten an OpenAI übermittelt, um eine Antwort zu erzeugen und missbräuchliche Inhalte zu prüfen.",
+        "Der Chat-Assistent ist ein freiwilliges Angebot zur ersten Projekteinschätzung. Wenn er aktiviert ist, werden deine Chatnachrichten an OpenAI übermittelt, um eine Antwort zu erzeugen und Inhalte auf Missbrauch zu prüfen.",
         "Bitte gib im Chat keine sensiblen Daten, Passwörter, vertraulichen Kundendaten oder Geschäftsgeheimnisse ein. Kontaktdaten werden nur gespeichert, wenn du sie selbst freiwillig im Projektkontext angibst.",
         "Der KI-Assistent trifft keine rechtlich bindenden Entscheidungen über dich und ersetzt keine individuelle Beratung oder ein konkretes Angebot.",
       ],
@@ -63,7 +63,7 @@ const PRIVACY_SECTIONS: Record<Locale, Section[]> = {
     {
       title: "6. E-Mail-Versand über Resend",
       body: [
-        "Für die Weiterleitung von Kontaktformular-Anfragen kann Resend eingesetzt werden. Dabei werden die zur Zustellung erforderlichen Daten verarbeitet.",
+        "Für die Weiterleitung von Kontaktformular-Anfragen kann Resend eingesetzt werden. Dabei verarbeitet Resend die Daten, die für die Zustellung erforderlich sind.",
         "Die konkrete Zustellung kann je nach Konfiguration auch intern weitergeleitet werden. Rechtsgrundlage ist die Bearbeitung deiner Anfrage nach Art. 6 Abs. 1 lit. b oder lit. f DSGVO.",
       ],
     },
@@ -104,7 +104,7 @@ const PRIVACY_SECTIONS: Record<Locale, Section[]> = {
     {
       title: "12. Drittlandübermittlungen",
       body: [
-        "Einige eingesetzte Dienstleister haben Sitz oder technische Verarbeitung außerhalb der Europäischen Union. In diesen Fällen achten wir auf geeignete Garantien, etwa Auftragsverarbeitungsverträge, Data Privacy Framework-Zertifizierungen und Standardvertragsklauseln, soweit erforderlich.",
+        "Einige eingesetzte Dienstleister haben ihren Sitz außerhalb der Europäischen Union oder verarbeiten Daten technisch auch außerhalb der EU. In diesen Fällen achten wir, soweit erforderlich, auf geeignete Garantien wie Auftragsverarbeitungsverträge, Data Privacy Framework-Zertifizierungen und Standardvertragsklauseln.",
       ],
     },
     {
@@ -226,7 +226,7 @@ const IMPRESSUM_COPY = {
     eyebrow: "Rechtliches",
     title: "Impressum",
     intro:
-      "Anbieterkennzeichnung und Kontaktangaben für die Website aurillia.de.",
+      "Anbieterkennzeichnung und Kontaktangaben für aurillia.de.",
     providerTitle: "Angaben gemäß § 5 DDG",
     businessTitle: "Unternehmens- und Steuerstatus",
     responsibleTitle: "Verantwortlich für Inhalte nach § 18 Abs. 2 MStV, soweit anwendbar",
@@ -234,7 +234,7 @@ const IMPRESSUM_COPY = {
     liabilityTitle: "Haftung für Inhalte und Links",
     liabilityBody: [
       "Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Eine Gewähr für Vollständigkeit, Richtigkeit und Aktualität kann jedoch nicht übernommen werden; die Haftung nach den gesetzlichen Vorschriften bleibt unberührt.",
-      "Für externe Links sind die jeweiligen Anbieter verantwortlich. Verlinkte Seiten wurden zum Zeitpunkt der Verlinkung auf erkennbare Rechtsverstöße geprüft. Eine dauerhafte Kontrolle fremder Inhalte ist ohne konkrete Hinweise nicht zumutbar. Bei Bekanntwerden rechtswidriger Inhalte werden betroffene Links entfernt.",
+      "Für externe Links sind die jeweiligen Anbieter verantwortlich. Verlinkte Seiten wurden zum Zeitpunkt der Verlinkung auf erkennbare Rechtsverstöße geprüft. Eine dauerhafte Kontrolle fremder Inhalte ist ohne konkrete Hinweise nicht zumutbar. Werden rechtswidrige Inhalte bekannt, entfernen wir die betroffenen Links.",
     ],
     copyrightTitle: "Urheberrecht",
     copyrightBody: [

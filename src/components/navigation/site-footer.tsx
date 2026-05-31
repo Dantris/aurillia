@@ -1,16 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { localizedPath, type Locale } from "@/lib/i18n";
-import { hasLegalPhone, legalConfig, legalPhoneHref } from "@/lib/legal";
 
 const FOOTER_COPY = {
   de: {
     description:
-      "Aurillia baut klare Websites, ausgewählte mobile Erweiterungen und digitale Oberflächen, die verständlicher verkaufen, besser erklären und nach dem Launch weiter nutzbar bleiben.",
-    availability: "Aktuell offen für ausgewählte Webprojekte.",
+      "Aurillia baut klare Websites, ausgewählte App-Erweiterungen und digitale Oberflächen, die besser erklären, gezielter verkaufen und nach dem Start weiter nutzbar bleiben.",
+    availability: "Aktuell offen für ausgewählte Website-Projekte.",
     contactTitle: "Projekt im Kopf?",
     contactBody:
-      "Schick uns deine aktuelle Website, eine grobe Idee oder die Stellen, an denen es gerade hakt.",
+      "Schickt uns eure aktuelle Website, eine grobe Idee oder die Stellen, an denen es gerade hakt.",
     contactCta: "Kontakt aufnehmen",
     services: "Leistungen",
     serviceLinks: [
@@ -19,7 +18,7 @@ const FOOTER_COPY = {
       ["Kontakt", "/contact"],
     ] as const,
     approach: "Worum wir uns kümmern",
-    approachItems: ["Struktur & Text", "Designsystem", "Next.js Build", "SEO-Basics", "Launch & Care"],
+    approachItems: ["Struktur & Text", "Designsystem", "Next.js-Umsetzung", "SEO-Basics", "Start & Pflege"],
     company: "Aurillia",
     companyItems: ["Deutsch / Englisch", "Remote aus Deutschland", "Antwort in 1-2 Werktagen"],
     legalTitle: "Rechtliches",
@@ -126,21 +125,7 @@ export default function SiteFooter({ locale = "de" }: { locale?: Locale }) {
 
       <div className="border-t border-[var(--site-line)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-sm leading-6 text-[var(--site-muted)] md:flex-row md:items-center md:justify-between md:px-10">
-          <p>
-            © {new Date().getFullYear()} Aurillia.{" "}
-            <a className="footer-link" href={`mailto:${legalConfig.email}`}>
-              {legalConfig.email}
-            </a>
-            {hasLegalPhone ? (
-              <>
-                {" "}
-                ·{" "}
-                <a className="footer-link" href={legalPhoneHref()}>
-                  {legalConfig.phone}
-                </a>
-              </>
-            ) : null}
-          </p>
+          <p>© {new Date().getFullYear()} Aurillia.</p>
           <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label={copy.legalTitle}>
             {copy.legalLinks.map(([label, href]) => (
               <Link key={href} href={localizedPath(href, locale)} className="footer-link">

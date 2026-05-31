@@ -88,16 +88,16 @@ const SECTION_COPY: Record<
 > = {
   de: {
     capabilitiesLabel: "Was wir klären",
-    capabilitiesTitle: "Erst die richtigen Antworten, dann das Design.",
+    capabilitiesTitle: "Erst die richtigen Fragen, dann das Design.",
     capabilitiesIntro:
       "Ein gutes digitales Angebot nimmt Nutzern Arbeit ab: verstehen, vergleichen, entscheiden und handeln.",
     workflowLabel: "So läuft es",
-    workflowTitle: "Wir machen daraus einen sauberen Weg.",
+    workflowTitle: "Wir machen daraus einen klaren Weg.",
     workflowIntro:
-      "Du siehst jederzeit, was entschieden wird, was gerade entsteht und was bereit für den Launch ist.",
+      "Ihr seht jederzeit, was entschieden wird, was gerade entsteht und was bereit für den Start ist.",
     fitLabel: "Wann es passt",
     outcomesLabel: "Was besser wird",
-    outcomesTitle: "Am Ende soll die digitale Oberfläche spürbar mehr tragen.",
+    outcomesTitle: "Am Ende soll die digitale Oberfläche spürbar mehr leisten.",
     faqLabel: "Häufige Fragen",
     faqTitle: "Kurz geklärt, bevor wir sprechen.",
     closingEyebrow: "Aurillia",

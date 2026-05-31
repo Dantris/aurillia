@@ -71,7 +71,7 @@ export const legalServiceProviders = [
       en: "Art. 6(1)(f) GDPR; legitimate interest in secure and stable website delivery.",
     },
     transfer: {
-      de: "Verarbeitung kann in den USA oder weiteren Standorten erfolgen; Absicherung über DPA und Standardvertragsklauseln, soweit erforderlich.",
+      de: "Die Verarbeitung kann in den USA oder an weiteren Standorten erfolgen; Absicherung über DPA und Standardvertragsklauseln, soweit erforderlich.",
       en: "Processing may take place in the United States or other locations; safeguarded by a DPA and standard contractual clauses where required.",
     },
   },
@@ -92,7 +92,7 @@ export const legalServiceProviders = [
       en: "Art. 6(1)(b) GDPR for pre-contract project inquiries, otherwise Art. 6(1)(f) GDPR.",
     },
     transfer: {
-      de: "Verarbeitung kann außerhalb der EU erfolgen; Absicherung über DPA und Standardvertragsklauseln, soweit erforderlich.",
+      de: "Die Verarbeitung kann außerhalb der EU erfolgen; Absicherung über DPA und Standardvertragsklauseln, soweit erforderlich.",
       en: "Processing may take place outside the EU; safeguarded by a DPA and standard contractual clauses where required.",
     },
   },
@@ -142,7 +142,7 @@ export const legalServiceProviders = [
       en: "Art. 6(1)(b) GDPR for pre-contract project inquiries, otherwise Art. 6(1)(f) GDPR.",
     },
     transfer: {
-      de: "Verarbeitung kann in den USA erfolgen; Absicherung über DPA, Data Privacy Framework und Standardvertragsklauseln, soweit erforderlich.",
+      de: "Die Verarbeitung kann in den USA erfolgen; Absicherung über DPA, Data Privacy Framework und Standardvertragsklauseln, soweit erforderlich.",
       en: "Processing may take place in the United States; safeguarded by a DPA, Data Privacy Framework, and standard contractual clauses where required.",
     },
   },
@@ -163,7 +163,7 @@ export const legalServiceProviders = [
       en: "Art. 6(1)(f) GDPR; legitimate interest in spam and abuse protection.",
     },
     transfer: {
-      de: "Verarbeitung kann außerhalb der EU erfolgen; Absicherung über DPA, Data Privacy Framework und Standardvertragsklauseln, soweit erforderlich.",
+      de: "Die Verarbeitung kann außerhalb der EU erfolgen; Absicherung über DPA, Data Privacy Framework und Standardvertragsklauseln, soweit erforderlich.",
       en: "Processing may take place outside the EU; safeguarded by a DPA, Data Privacy Framework, and standard contractual clauses where required.",
     },
   },

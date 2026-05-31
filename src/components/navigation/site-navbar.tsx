@@ -17,26 +17,26 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Webentwicklung",
       href: "/services/web",
-      description: "Websites, Relaunches und Leistungsseiten, die schneller verstanden werden.",
-      highlights: ["Website", "SEO", "Launch"],
+      description: "Websites, Relaunches und Leistungsseiten, die euer Angebot schneller verständlich machen.",
+      highlights: ["Website", "SEO", "Start"],
     },
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "PWA, App oder mobiler Ablauf, wenn der Browser nicht mehr reicht.",
+      description: "PWA, App oder mobiler Ablauf, wenn der Browser zu umständlich wird.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
       title: "KI-Assistenten",
       href: "/contact?interest=AI%20Chatbot%20%2F%20Assistant",
-      description: "Chatbots, Projektberater und hilfreiche KI-Strecken für Websites.",
+      description: "Chatbots, Projektberater und hilfreiche KI-Assistenz für Websites.",
       highlights: ["Chat", "Wissen", "Leads"],
     },
     {
-      title: "Website Care",
+      title: "Website-Betreuung",
       href: "/contact?interest=Website%20Care",
-      description: "Pflege, Inhalte, Analytics und kleine Verbesserungen nach dem Launch.",
-      highlights: ["Content", "Analytics", "Care"],
+      description: "Pflege, Inhalte, Analytics und kleine Verbesserungen nach dem Start.",
+      highlights: ["Inhalte", "Analytics", "Pflege"],
     },
   ],
   en: [
@@ -76,12 +76,12 @@ const NAV_COPY = {
     closeMenu: "Menü schließen",
     mobileInfoTitle: "Die meisten Projekte starten im Web",
     mobileInfoBody:
-      "Eine klare Website gibt Mobile- und KI-Assistenten-Arbeit eine stärkere Grundlage.",
-    developmentTitle: "So passt es zusammen",
+      "Eine klare Website gibt App- und KI-Projekten eine stabilere Grundlage.",
+    developmentTitle: "So greift es ineinander",
     developmentBody:
-      "Website, Inhalte, Technik und Betreuung gehören zusammen. Mobile und KI kommen dazu, wenn sie einen echten Ablauf leichter machen.",
-    flow: ["Struktur", "Text", "Design", "Build", "Launch"],
-    support: ["SEO", "Formulare", "Analytics", "Care"],
+      "Website, Inhalte, Technik und Betreuung gehören zusammen. Apps und KI kommen dazu, wenn sie einen echten Ablauf leichter machen.",
+    flow: ["Struktur", "Text", "Design", "Umsetzung", "Start"],
+    support: ["SEO", "Formulare", "Analytics", "Pflege"],
     openWeb: "Webentwicklung öffnen",
   },
   en: {

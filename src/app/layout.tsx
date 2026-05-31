@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   metadataBase: seoConfig.metadataBase,
   applicationName: seoConfig.name,
   title: {
-    default: "Aurillia - Webentwicklung für klare Unternehmenswebsites",
+    default: "Aurillia - Webentwicklung für klare Unternehmensseiten",
     template: "%s",
   },
   description:
-    "Aurillia entwickelt moderne Websites, Leistungsseiten und Websysteme für Unternehmen, die verständlicher auftreten und bessere Anfragen bekommen wollen.",
+    "Aurillia entwickelt Websites, Leistungsseiten und Websysteme, die Angebote klarer erklären und bessere Anfragen vorbereiten.",
   authors: [{ name: seoConfig.name, url: seoConfig.siteUrl }],
   creator: seoConfig.name,
   publisher: seoConfig.name,

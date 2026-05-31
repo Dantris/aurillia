@@ -34,19 +34,19 @@ const CHAT_COPY: Record<
   de: {
     title: "Projektassistent",
     greeting:
-      "Hallo, ich bin der Aurillia-Assistent. Erzählen Sie kurz, was Sie bauen oder verbessern möchten, und ich helfe, einen sinnvollen ersten Schritt zu formen.",
+      "Hallo, ich bin der Aurillia-Assistent. Sag kurz, was du bauen oder verbessern möchtest, und ich helfe dir, den nächsten sinnvollen Schritt zu finden.",
     close: "Chat schließen",
-    thinking: "Denkt nach",
+    thinking: "Denke nach",
     placeholder: "Projekt beschreiben",
     send: "Senden",
     launcher: "Aurillia fragen",
     genericError:
-      "Etwas ist schiefgelaufen. Versuchen Sie es gleich erneut oder nutzen Sie das Kontaktformular.",
+      "Da ist etwas schiefgelaufen. Versuch es gleich erneut oder nutze das Kontaktformular.",
     unavailableError:
       "Ich konnte gerade keine Antwort erzeugen. Die Kontaktseite ist weiterhin verfügbar.",
     quickOptions: [
       { label: "Website", text: "Ich möchte meine Unternehmenswebsite verbessern oder neu aufbauen." },
-      { label: "Mobile App", text: "Ich möchte eine mobile App für mein Produkt oder meinen Ablauf prüfen." },
+      { label: "Mobile App", text: "Ich möchte prüfen, ob eine mobile App für mein Produkt oder meinen Ablauf sinnvoll ist." },
       { label: "KI-Assistent", text: "Ich möchte einen KI-Chatbot oder Assistenten auf meiner Website ergänzen." },
       { label: "Noch unsicher", text: "Ich brauche Hilfe dabei, den richtigen ersten Schritt zu finden." },
     ],

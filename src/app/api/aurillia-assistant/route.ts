@@ -268,11 +268,11 @@ function getSafeMessage(locale: Locale, kind: "blocked" | "rate" | "scope" | "un
   const messages = {
     de: {
       blocked:
-        "Dabei kann ich hier nicht helfen. Ich kann aber gern bei Website-, Mobile-App- oder KI-Assistenten-Projekten helfen.",
+        "Dabei kann ich hier nicht helfen. Ich kann dir aber gern bei Website-, App- oder KI-Assistenten-Projekten helfen.",
       rate:
         "Kurz pausieren bitte. Es kamen gerade zu viele Nachrichten an. Versuch es in einer Minute erneut oder nutze die Kontaktseite.",
       scope:
-        "Ich bin hier auf Aurillia-Projekte begrenzt: Websites, Mobile Apps und sinnvolle KI-Assistenten. Wenn du dazu etwas planst, beschreib kurz Ziel, aktuelle Seite und gewünschtes Ergebnis.",
+        "Ich bin hier auf Aurillia-Projekte begrenzt: Websites, Apps und sinnvolle KI-Assistenten. Wenn du dazu etwas planst, beschreib kurz Ziel, aktuelle Seite und gewünschtes Ergebnis.",
       unavailable:
         "Der Assistent ist gerade nicht verfügbar. Die Kontaktseite funktioniert weiterhin.",
       tooLarge:
@@ -310,7 +310,7 @@ function safeAssistantResponse(locale: Locale, kind: "blocked" | "rate" | "scope
 function getSystemPrompt(locale: Locale) {
   const languageRule =
     locale === "de"
-      ? "Write in concise German. Use warm, direct du language. Avoid hype."
+      ? "Write in concise, natural German. Use warm, direct du language. Avoid hype and awkward literal translations."
       : "Write in concise English. Be warm, specific, and avoid hype.";
 
   return `

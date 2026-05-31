@@ -57,7 +57,7 @@ export default function Image() {
               letterSpacing: 0,
             }}
           >
-            Websites, die Unternehmen klarer machen.
+            Websites, die Angebote klarer machen.
           </div>
           <div
             style={{

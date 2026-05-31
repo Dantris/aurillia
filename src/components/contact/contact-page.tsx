@@ -20,26 +20,26 @@ type ContactOption = {
 const COPY = {
   de: {
     eyebrow: "Kontakt",
-    title: "Erzähl uns, wo die Website gerade hakt.",
+    title: "Erzählt uns, wo es online gerade hakt.",
     intro:
-      "Du brauchst kein fertiges Lastenheft. Ein Link, ein paar Sätze zum Angebot und die Stellen, an denen die aktuelle Seite nicht mehr trägt, reichen für den Anfang.",
+      "Ihr braucht kein fertiges Lastenheft. Ein Link, ein paar Sätze zum Angebot und die Stellen, an denen eure aktuelle Seite nicht mehr trägt, reichen für den Anfang.",
     emailLabel: "E-Mail",
     replyLabel: "Typische Antwort",
     replyValue: "1-2 Werktage",
     firstMessageLabel: "Gute erste Nachricht",
     firstMessageValue: "Ziel, Kontext, grober Zeitplan und bestehende Links",
     success:
-      "Danke. Deine Nachricht ist angekommen. Wir prüfen sie und melden uns mit einem praktischen nächsten Schritt.",
+      "Danke. Eure Nachricht ist angekommen. Wir prüfen sie und melden uns mit einem sinnvollen nächsten Schritt.",
     errors: {
-      invalid: "Bitte prüf Name, E-Mail und Nachricht. Die Nachricht sollte mindestens ein paar Sätze enthalten.",
-      rate: "Es kamen gerade zu viele Nachrichten an. Versuch es in ein paar Minuten erneut.",
-      send: "Die Nachricht konnte gerade nicht per E-Mail weitergeleitet werden. Schreib uns bitte direkt per E-Mail.",
-      turnstile: "Die Sicherheitsprüfung ist abgelaufen. Bitte lade die Seite neu und versuch es noch einmal.",
-      generic: "Das Formular konnte gerade nicht verarbeitet werden. Schreib uns bitte direkt per E-Mail.",
+      invalid: "Bitte prüft Name, E-Mail und Nachricht. Die Nachricht sollte mindestens ein wenig Kontext enthalten.",
+      rate: "Es kamen gerade zu viele Nachrichten an. Versucht es bitte in ein paar Minuten erneut.",
+      send: "Die Nachricht konnte gerade nicht per E-Mail weitergeleitet werden. Schreibt uns bitte direkt per E-Mail.",
+      turnstile: "Die Sicherheitsprüfung ist abgelaufen. Bitte ladet die Seite neu und versucht es noch einmal.",
+      generic: "Das Formular konnte gerade nicht verarbeitet werden. Schreibt uns bitte direkt per E-Mail.",
     },
     formTitle: "Kurze Projektnotiz",
     formIntro:
-      "Je konkreter du die aktuelle Situation beschreibst, desto nützlicher können wir antworten.",
+      "Je konkreter ihr die aktuelle Situation beschreibt, desto nützlicher können wir antworten.",
     name: "Name",
     namePlaceholder: "Vorname und Nachname",
     email: "E-Mail",
@@ -47,7 +47,7 @@ const COPY = {
     company: "Unternehmen",
     companyPlaceholder: "Unternehmen, Praxis oder Marke",
     website: "Aktuelle Website",
-    websitePlaceholder: "https://deine-domain.de",
+    websitePlaceholder: "https://eure-domain.de",
     timeline: "Zeitplan",
     timelinePlaceholder: "z.B. Relaunch vor dem Quartalsstart",
     projectType: "Projektart",
@@ -55,19 +55,19 @@ const COPY = {
     messagePlaceholder:
       "Was passt aktuell nicht, was soll sich ändern und welche Seiten oder Angebote sind besonders wichtig?",
     formNote:
-      "Kein Sales-Skript. Wir antworten mit nützlicher Richtung oder sagen ehrlich, wenn es nicht passt.",
+      "Kein Vertriebsskript. Wir antworten mit einer klaren Richtung oder sagen ehrlich, wenn es nicht passt.",
     submit: "Projektnotiz senden",
     privacyNote:
-      "Deine Angaben werden nur genutzt, um die Anfrage zu prüfen und zu beantworten.",
+      "Eure Angaben werden nur genutzt, um die Anfrage zu prüfen und zu beantworten.",
     promptEyebrow: "Was hilft",
     promptTitle: "Ein guter Start ist oft kleiner, als man denkt.",
     promptIntro:
-      "Viele Projekte hängen, weil alle auf den perfekten Brief warten. Für eine erste Einschätzung brauchen wir vor allem Kontext.",
+      "Viele Projekte hängen, weil alle auf das perfekte Briefing warten. Für eine erste Einschätzung brauchen wir vor allem Kontext.",
     promptItems: [
       {
-        title: "Aktuelle Website oder Produktlink",
+        title: "Aktuelle Website oder Produktseite",
         body:
-          "Damit wir sehen, was schon da ist, wo die Sprache bricht und welche technischen Grundlagen vorhanden sind.",
+          "Damit wir sehen, was schon da ist, wo die Sprache nicht trägt und welche technischen Grundlagen vorhanden sind.",
       },
       {
         title: "Was gerade nicht funktioniert",
@@ -75,28 +75,28 @@ const COPY = {
           "Zu wenig Anfragen, falsche Erwartungen, schwierige Pflege, unklare Leistungen oder ein Auftritt, der nicht mehr zum Unternehmen passt.",
       },
       {
-        title: "Was nach dem Launch leichter sein soll",
+        title: "Was nach dem Start leichter sein soll",
         body:
-          "Zum Beispiel bessere Anfragen, klarere Leistungsseiten, weniger manuelle Erklärung oder eine Basis für spätere Funktionen.",
+          "Zum Beispiel bessere Anfragen, klarere Leistungsseiten, weniger manuelles Erklären oder eine Basis für spätere Funktionen.",
       },
     ],
     nextEyebrow: "Was dann passiert",
-    nextTitle: "Von der ersten Nachricht zu einem Scope, den man wirklich entscheiden kann.",
+    nextTitle: "Von der ersten Nachricht zu einem Umfang, den ihr wirklich entscheiden könnt.",
     steps: [
       {
-        title: "Wir lesen auf Kontext, nicht nur auf Features",
+        title: "Wir lesen auf Kontext, nicht nur auf Funktionen",
         body:
-          "Der erste Blick gilt dem Geschäft, der aktuellen Oberfläche und der Frage, ob Web, Mobile oder Assistentenarbeit der richtige Startpunkt ist.",
+          "Der erste Blick gilt eurem Geschäft, der aktuellen Oberfläche und der Frage, ob Website, App oder KI-Assistenz der richtige Startpunkt ist.",
       },
       {
         title: "Wir stellen die nützlichen Fragen",
         body:
-          "Vielleicht kommen ein paar fokussierte Fragen zu Zielgruppe, Inhalten, Integrationen, Zeitplan oder den Stellen, an denen die aktuelle Erfahrung hakt.",
+          "Vielleicht kommen ein paar fokussierte Fragen zu Zielgruppe, Inhalten, Integrationen, Zeitplan oder den Stellen, an denen die aktuelle Nutzererfahrung hakt.",
       },
       {
         title: "Wir schlagen eine erste Form vor",
         body:
-          "Wenn es passt, ist der nächste Schritt ein kleiner Scope: was zuerst gebaut wird, was draußen bleibt und wie der Launch ohne Drift gelingt.",
+          "Wenn es passt, ist der nächste Schritt ein kleiner Projektumfang: was zuerst gebaut wird, was draußen bleibt und wie der Start ohne Verzetteln gelingt.",
       },
     ],
     options: [
@@ -113,12 +113,12 @@ const COPY = {
       {
         value: "AI Chatbot / Assistant",
         label: "KI-Assistent",
-        body: "Chatbot, Projektberater oder hilfreiche KI-Strecke auf der Website.",
+        body: "Chatbot, Projektberater oder hilfreiche KI-Assistenz auf der Website.",
       },
       {
         value: "Website Care",
-        label: "Website Care",
-        body: "Pflege, Inhalte, Analytics und kleine Verbesserungen nach dem Launch.",
+        label: "Website-Betreuung",
+        body: "Pflege, Inhalte, Analytics und kleine Verbesserungen nach dem Start.",
       },
     ],
   },

@@ -7,9 +7,9 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
   de: {
     web: {
       eyebrow: "Leistungen / Webentwicklung",
-      title: "Eine Website, die Kunden nicht erst suchen lässt.",
+      title: "Eine Website, die euer Angebot schneller verständlich macht.",
       intro:
-        "Wenn deine Website alt wirkt oder wichtige Fragen offenlässt, verlierst du Anfragen, Bewerbungen und Vertrauen. Wir bringen Angebot, Inhalte, Design und Technik so zusammen, dass Besucher schneller verstehen, warum sie bei dir richtig sind.",
+        "Wenn eure Website alt wirkt, unklar bleibt oder wichtige Fragen offenlässt, kostet das Anfragen, Bewerbungen und Vertrauen. Wir bringen Angebot, Inhalte, Design und Technik so zusammen, dass Besucher schneller verstehen, warum ihr die richtige Wahl seid.",
       primaryCta: "Website verbessern",
       secondaryCta: "Was wir übernehmen",
       contactInterest: "Web Development",
@@ -18,46 +18,46 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           label: "Worum es geht",
           value: "Klarheit",
           detail:
-            "Deine Website soll nicht nur gut aussehen. Sie soll erklären, Vertrauen schaffen und den nächsten Schritt einfach machen.",
+            "Eure Website soll nicht nur gut aussehen. Sie soll erklären, Vertrauen schaffen und den nächsten Schritt leicht machen.",
         },
         {
           label: "Umsetzung",
           value: "Next.js",
           detail:
-            "Schnell, sauber strukturiert und so gebaut, dass Inhalte, SEO und spätere Erweiterungen nicht jedes Mal ein neues Projekt werden.",
+            "Schnell, sauber strukturiert und so gebaut, dass Inhalte, SEO und spätere Erweiterungen nicht jedes Mal neu aufgesetzt werden müssen.",
         },
         {
           label: "Danach",
           value: "Betreuung",
           detail:
-            "Wenn gewünscht, bleiben wir dran: kleine Änderungen, technische Pflege, Analytics und gezielte Verbesserungen nach dem Launch.",
+            "Auf Wunsch bleiben wir dabei: mit kleinen Änderungen, technischer Pflege, Analytics und gezielten Verbesserungen nach dem Start.",
         },
       ],
       concerns: {
-        eyebrow: "Kommt dir das bekannt vor?",
-        title: "Oft ist nicht die Website das Problem. Es ist das Gefühl, dass sie nicht mehr mitarbeitet.",
+        eyebrow: "Kommt euch das bekannt vor?",
+        title: "Oft ist die Website nicht kaputt. Sie hilft nur nicht mehr richtig mit.",
         intro:
-          "Ein Relaunch wird schnell groß, teuer und unklar. Deshalb starten wir bei den Stellen, an denen eure aktuelle Seite heute schon Zeit, Vertrauen oder Anfragen kostet.",
+          "Ein Relaunch wird schnell groß, teuer und schwer greifbar. Deshalb starten wir dort, wo eure aktuelle Seite heute schon Zeit, Vertrauen oder gute Anfragen kostet.",
         items: [
           {
             title: "Die Seite sieht okay aus, aber erklärt zu wenig.",
             body:
-              "Besucher verstehen nicht schnell genug, für wen ihr da seid, warum euer Angebot passt und was sie als Nächstes tun sollen.",
+              "Besucher verstehen nicht schnell genug, für wen ihr da seid, warum euer Angebot passt und was als Nächstes sinnvoll ist.",
           },
           {
             title: "Anfragen kommen ohne Kontext.",
             body:
-              "Das Kontaktformular ist da, aber die Website bereitet Gespräche kaum vor. Ihr müsst immer wieder dieselben Grundlagen erklären.",
+              "Das Kontaktformular ist vorhanden, aber die Website bereitet Gespräche kaum vor. Ihr erklärt immer wieder dieselben Grundlagen.",
           },
           {
             title: "Niemand weiß genau, ob die Website wirkt.",
             body:
-              "SEO, Analytics und Inhalte wurden irgendwann mitgedacht, aber nicht so, dass daraus gute Entscheidungen entstehen.",
+              "SEO, Analytics und Inhalte wurden irgendwann mitgedacht, aber nicht so, dass daraus verlässliche Entscheidungen entstehen.",
           },
           {
             title: "Der Relaunch wird immer wieder verschoben.",
             body:
-              "Weil unklar ist, wer Texte schreibt, wie viel Zeit es kostet und wo man überhaupt anfangen sollte.",
+              "Weil unklar ist, wer die Texte schreibt, wie viel Zeit gebraucht wird und womit ihr überhaupt anfangen sollt.",
           },
         ],
       },
@@ -66,7 +66,7 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           eyebrow: "Klarheit",
           title: "Erst verstehen, dann gestalten",
           body:
-            "Viele Websites scheitern nicht am Design, sondern daran, dass Angebot, Zielgruppe und nächster Schritt unklar bleiben. Wir sortieren, was Besucher sofort verstehen müssen und welche Fragen die Website vor dem ersten Gespräch beantworten sollte.",
+            "Viele Websites scheitern nicht am Design, sondern an unklaren Angeboten, Zielgruppen und nächsten Schritten. Wir sortieren, was Besucher sofort verstehen müssen und welche Fragen die Website vor dem ersten Gespräch beantworten sollte.",
           items: [
             "Angebot, Zielgruppen und wichtigste Einwände",
             "Seitenstruktur für Startseite, Leistungen und Kontakt",
@@ -78,7 +78,7 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           eyebrow: "Auftritt",
           title: "Modern, aber nicht künstlich",
           body:
-            "Der Look soll zu deinem Unternehmen passen: ruhig, hochwertig und klar lesbar, ohne dekorative Sektionen, die niemandem helfen. Daraus entsteht ein System für Seiten, Typografie, Bilder, Formulare und responsive Zustände.",
+            "Der Auftritt soll zu eurem Unternehmen passen: ruhig, hochwertig und klar lesbar, ohne dekorative Sektionen, die niemandem helfen. Daraus entsteht ein System für Seiten, Typografie, Bilder, Formulare und responsive Zustände.",
           items: [
             "Startseite, Leistungsseiten und Kontaktstrecke",
             "Responsive Layouts für Smartphone, Tablet und Desktop",
@@ -90,12 +90,12 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           eyebrow: "Technik",
           title: "Schnell, auffindbar und pflegbar",
           body:
-            "Unter der Oberfläche geht es um Ladezeit, saubere Struktur, SEO-Grundlagen und eine Basis, die nicht nach dem Launch stehen bleibt. Die Website soll erweiterbar bleiben, egal ob Inhalte, Analytics, Assistenten oder neue Funktionen dazukommen.",
+            "Unter der Oberfläche zählen Ladezeit, saubere Struktur, SEO-Grundlagen und eine Basis, die nach dem Start nicht stehen bleibt. Die Website soll erweiterbar bleiben, egal ob später Inhalte, Analytics, Assistenten oder neue Funktionen dazukommen.",
           items: [
             "Next.js- und TypeScript-Umsetzung",
-            "Metadata, sitemapfähige Struktur und Performance-Basics",
+            "Metadaten, sitemapfähige Struktur und Performance-Basics",
             "Kontaktformular, Analytics und sinnvolle Integrationen",
-            "Repository-Struktur, Deployment und Launch-Übergabe",
+            "Repository-Struktur, Deployment und Übergabe zum Start",
           ],
         },
       ],
@@ -103,7 +103,7 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
         {
           title: "Sortieren",
           body:
-            "Wir schauen uns an, was die aktuelle Website leisten soll, wo sie bremst und welche Zielgruppen zuerst überzeugt werden müssen.",
+            "Wir schauen uns an, was eure Website leisten soll, wo sie bremst und welche Zielgruppen zuerst überzeugt werden müssen.",
         },
         {
           title: "Schreiben und strukturieren",
@@ -113,63 +113,63 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
         {
           title: "Gestalten und bauen",
           body:
-            "Die Website wird zu einem responsiven Next.js-Build mit echter Inhaltsstruktur, Kontaktstrecke, SEO-Basics, Analytics und Deployment-Setup.",
+            "Die Website wird zu einem responsiven Next.js-Projekt mit echter Inhaltsstruktur, Kontaktstrecke, SEO-Basics, Analytics und sauberem Deployment.",
         },
         {
-          title: "Launchen und nachschärfen",
+          title: "Live gehen und nachschärfen",
           body:
-            "Nach dem Go-live prüfen wir die reale Nutzung, glätten Kanten und übergeben sauber oder bleiben für Pflege und Verbesserungen dabei.",
+            "Nach dem Livegang prüfen wir die Nutzung, glätten Kanten und übergeben sauber oder bleiben für Pflege und Verbesserungen an Bord.",
         },
       ],
-      fitTitle: "Gut, wenn deine Website gerade mehr bremst als hilft.",
+      fitTitle: "Gut, wenn eure Website gerade mehr bremst als hilft.",
       fitBody:
-        "Das passt, wenn du merkst: Das Angebot ist gut, aber online kommt es nicht klar genug rüber. Dann geht es nicht nur um einen neuen Look, sondern um Struktur, Vertrauen und einen besseren Weg zur Anfrage.",
+        "Das passt, wenn ihr merkt: Das Angebot ist gut, aber online kommt es nicht klar genug an. Dann geht es nicht nur um einen neuen Look, sondern um Struktur, Vertrauen und einen besseren Weg zur Anfrage.",
       fitItems: [
-        "Deine aktuelle Seite wirkt nicht mehr wie das Unternehmen, das heute dahintersteht.",
+        "Eure aktuelle Seite wirkt nicht mehr wie das Unternehmen, das heute dahintersteht.",
         "Besucher fragen Dinge, die die Website eigentlich schon beantworten sollte.",
-        "Du brauchst Leistungsseiten, Kontaktfluss und eine technische Basis, die direkt live gehen kann.",
+        "Ihr braucht Leistungsseiten, einen klaren Kontaktweg und eine technische Basis, die direkt live gehen kann.",
         "Die Website soll später mit Inhalten, KI-Assistenten, Dashboard-Oberflächen oder mobilen Erweiterungen wachsen können.",
       ],
       outcomes: [
         {
           title: "Besucher verstehen schneller, worum es geht",
           body:
-            "Angebot, Unterschiede und nächster Schritt werden sichtbarer, ohne dass jemand lange suchen muss.",
+            "Angebot, Unterschiede und nächster Schritt werden schneller sichtbar, ohne dass jemand lange suchen muss.",
         },
         {
           title: "Anfragen kommen mit mehr Kontext",
           body:
-            "Kontaktwege und Inhalte arbeiten zusammen, damit Gespräche besser vorbereitet starten.",
+            "Kontaktwege und Inhalte arbeiten zusammen, damit Gespräche besser vorbereitet beginnen.",
         },
         {
-          title: "Du musst nicht bei jeder Änderung von vorn anfangen",
+          title: "Ihr fangt bei Änderungen nicht wieder von vorn an",
           body:
             "Wiederverwendbare Komponenten, klare Sektionen und ein sauberer Codebestand machen spätere Anpassungen einfacher.",
         },
       ],
       trust: {
         eyebrow: "Wie wir arbeiten",
-        title: "Persönlich genug, um mitzudenken. Strukturiert genug, um fertig zu werden.",
+        title: "Persönlich genug zum Mitdenken. Strukturiert genug zum Fertigwerden.",
         intro:
-          "Du musst nicht mit fertigem Konzept, perfektem Text und komplettem Designsystem kommen. Wir helfen, das Projekt in eine Form zu bringen, die entscheidbar und umsetzbar ist.",
+          "Ihr müsst nicht mit fertigem Konzept, perfektem Text und komplettem Designsystem starten. Wir helfen, das Projekt in eine Form zu bringen, die entscheidbar und umsetzbar ist.",
         items: [
           {
             value: "01",
-            label: "Erst ein klarer Befund",
+            label: "Erst ein klarer Blick",
             body:
               "Wir schauen auf Angebot, Zielgruppen, aktuelle Seite und Prioritäten, bevor Layouts entstehen.",
           },
           {
             value: "02",
-            label: "Texte werden Teil des Builds",
+            label: "Texte gehören in den Aufbau",
             body:
-              "Content ist kein Nachtrag. Struktur, Ton und CTA-Logik werden früh zusammengebracht.",
+              "Inhalte sind kein Nachtrag. Struktur, Ton und der nächste Schritt werden früh zusammengebracht.",
           },
           {
             value: "03",
-            label: "Launch bleibt nicht allein",
+            label: "Der Start bleibt nicht allein",
             body:
-              "Nach dem Start gibt es Übergabe, Pflege oder kleine Verbesserungen, je nachdem was ihr intern leisten wollt.",
+              "Nach dem Start gibt es Übergabe, Pflege oder kleine Verbesserungen, je nachdem, was ihr intern übernehmen wollt.",
           },
         ],
       },
@@ -187,55 +187,55 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
         {
           question: "Kann die Website einen KI-Chatbot enthalten?",
           answer:
-            "Ja. Die aktuelle Aurillia-Seite hat bereits ein Projektassistenten-Muster, das für Kundenseiten angepasst werden kann.",
+            "Ja. Die aktuelle Aurillia-Seite nutzt bereits einen Projektassistenten, der für Kundenseiten angepasst werden kann.",
         },
         {
-          question: "Was passiert nach dem Launch?",
+          question: "Was passiert nach dem Start?",
           answer:
-            "Du kannst selbst übernehmen oder eine Betreuung für Updates, technische Wartung, kleine Inhaltsänderungen und messbare Verbesserungen behalten.",
+            "Ihr könnt selbst übernehmen oder eine Betreuung für Updates, technische Wartung, kleine Inhaltsänderungen und messbare Verbesserungen behalten.",
         },
       ],
       closingTitle:
-        "Aus einer Website, die irgendwie da ist, wird ein Auftritt, der mitarbeitet.",
+        "Aus einer Website, die nur da ist, wird ein Auftritt, der mitarbeitet.",
       closingBody:
-        "Schick uns deine aktuelle Website, ein grobes Angebot oder ein paar Notizen zu dem, was sich ändern soll. Die erste Antwort sortiert, was wirklich geklärt werden muss, was zuerst gebaut werden sollte und wo die Website einfacher werden kann.",
+        "Schickt uns eure aktuelle Website, ein grobes Angebot oder ein paar Notizen zu dem, was sich ändern soll. Unsere erste Antwort sortiert, was wirklich geklärt werden muss, was zuerst gebaut werden sollte und wo die Website einfacher werden kann.",
     },
     mobile: {
       eyebrow: "Leistungen / Mobile Apps",
-      title: "Mobile Apps für Abläufe, die in die Tasche gehören.",
+      title: "Apps für Abläufe, die unterwegs funktionieren müssen.",
       intro:
-        "Aurillia übernimmt ausgewählte mobile Projekte, wenn es einen klaren Produktgrund gibt: Außendienst, wiederkehrende Kundenaktionen, interne Abläufe oder eine Begleiterfahrung, die nicht nur im Browser leben sollte.",
-      primaryCta: "Mobile Projekt planen",
+        "Aurillia übernimmt ausgewählte App-Projekte, wenn es einen klaren Produktgrund gibt: Außendienst, wiederkehrende Kundenaktionen, interne Abläufe oder eine Begleitfunktion, die nicht nur im Browser stattfinden sollte.",
+      primaryCta: "App-Projekt planen",
       secondaryCta: "Passung ansehen",
       contactInterest: "Mobile Apps",
       highlights: [
         {
-          label: "Am besten wenn",
+          label: "Passt, wenn",
           value: "Fokussiert",
           detail:
-            "Mobile lohnt sich, wenn eine Aufgabe häufig, kontextabhängig oder zeitkritisch genug ist, um eine App zu verdienen.",
+            "Eine App lohnt sich, wenn eine Aufgabe häufig, kontextabhängig oder zeitkritisch genug ist, um einen eigenen mobilen Ablauf zu rechtfertigen.",
         },
         {
           label: "Umsetzung",
-          value: "Cross-platform",
+          value: "Flexibel",
           detail:
-            "React Native, Expo oder PWA, abhängig von Verteilung, Budget und der realen Umgebung der Nutzer.",
+            "React Native, Expo oder PWA, je nach Verteilung, Budget und realer Nutzungsumgebung.",
         },
         {
           label: "Reihenfolge",
-          value: "Nach Web",
+          value: "Erst Web",
           detail:
-            "Die meisten Projekte sollten mit einer starken Webbasis starten und erst dann mobil erweitert werden, wenn der Use Case bewiesen ist.",
+            "Die meisten Projekte sollten mit einer starken Webbasis starten und erst dann mobil werden, wenn der Anwendungsfall bewiesen ist.",
         },
       ],
       concerns: {
         eyebrow: "Bevor es eine App wird",
-        title: "Mobile lohnt sich erst, wenn der Alltag wirklich leichter wird.",
+        title: "Eine App lohnt sich erst, wenn der Alltag wirklich leichter wird.",
         intro:
           "Viele App-Ideen starten mit einer langen Featureliste. Wir drehen das um und fragen zuerst, welche Situation heute zu langsam, zu fehleranfällig oder zu umständlich ist.",
         items: [
           {
-            title: "Der Browser ist im Einsatz zu träge.",
+            title: "Der Browser ist unterwegs zu träge.",
             body:
               "Außendienst, Checklisten, Scans oder Statusmeldungen brauchen oft schnellere Wege als eine normale Website bieten kann.",
           },
@@ -247,10 +247,10 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           {
             title: "Die App-Idee ist groß, aber noch unscharf.",
             body:
-              "Dann hilft kein riesiges Pflichtenheft, sondern ein kleiner erster Loop, der wirklich benutzt werden kann.",
+              "Dann hilft kein riesiges Pflichtenheft, sondern ein kleiner erster Ablauf, der wirklich benutzt werden kann.",
           },
           {
-            title: "Mobile soll mit Web und Backend zusammenspielen.",
+            title: "Die App soll mit Website und Backend zusammenspielen.",
             body:
               "Eine App ist selten allein. Sie braucht Daten, Rechte, Updates und eine klare Verbindung zum restlichen System.",
           },
@@ -261,31 +261,31 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
           eyebrow: "Produkt-Fit",
           title: "Eine kleinere erste Version",
           body:
-            "Mobile wird teuer, wenn es alles gleichzeitig können soll. Wir reduzieren die App auf die wichtigsten Abläufe und gestalten um echte Nutzungssituationen herum.",
+            "App-Projekte werden teuer, wenn sie alles gleichzeitig können sollen. Wir reduzieren die erste Version auf die wichtigsten Abläufe und gestalten um echte Nutzungssituationen herum.",
           items: [
             "Begleit-Apps für Kunden",
             "Interne Tools für Teams und Außendienst",
-            "Buchung, Reporting, Scans, Reviews und Statusflüsse",
-            "Klare MVP-Grenze vor dem Build",
+            "Buchung, Reporting, Scans, Bewertungen und Statusflüsse",
+            "Klare MVP-Grenze vor der Umsetzung",
           ],
         },
         {
-          eyebrow: "Experience",
+          eyebrow: "Nutzung",
           title: "Schnelle Wege und ruhige Zustände",
           body:
-            "Eine gute mobile App fühlt sich selbstverständlich an. Wir gestalten Screens, Empty States, Ladezustände, Offline-Bedarf und Navigation so, dass sie auch unter Druck nützlich bleibt.",
+            "Eine gute App fühlt sich selbstverständlich an. Wir gestalten Screens, leere Zustände, Ladezustände, Offline-Bedarf und Navigation so, dass sie auch unter Druck nützlich bleibt.",
           items: [
-            "Fokussierte UX-Flows und Screen Maps",
+            "Fokussierte Abläufe und Screen-Übersichten",
             "Touchfreundliche Interface-Muster",
             "Offline-, Fehler- und Berechtigungszustände",
-            "Push, Deep Links, Auth und Account-Flows, wenn nötig",
+            "Push, Deep Links, Login und Account-Abläufe, wenn nötig",
           ],
         },
         {
-          eyebrow: "Launch",
+          eyebrow: "Start",
           title: "Bereit über die Demo hinaus",
           body:
-            "Der Build enthält die unspektakulären Teile, die Mobile real machen: Release-Kanäle, Store-Vorbereitung, Crash-Sichtbarkeit und Integration mit dem Webprodukt.",
+            "Die Umsetzung enthält auch die unspektakulären Teile, die aus einer Demo ein echtes Produkt machen: Release-Kanäle, Store-Vorbereitung, Crash-Reporting und Integration mit dem Webprodukt.",
           items: [
             "React Native-, Expo- oder PWA-Umsetzung",
             "API-Integration und typisierte Datenflüsse",
@@ -296,40 +296,40 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
       ],
       workflow: [
         {
-          title: "Grund für Mobile prüfen",
+          title: "Grund für die App prüfen",
           body:
-            "Wir definieren, wer die App öffnet, wann sie geöffnet wird, was erledigt werden muss und warum dieselbe Aufgabe auf der Website umständlich ist.",
+            "Wir klären, wer die App öffnet, wann sie genutzt wird, was erledigt werden muss und warum dieselbe Aufgabe auf der Website umständlich ist.",
         },
         {
-          title: "Ersten nützlichen Loop gestalten",
+          title: "Ersten nützlichen Ablauf gestalten",
           body:
-            "Wir mappen den kleinsten vollständigen Ablauf, inklusive Account-Setup, Hauptaktionen, Benachrichtigungen, Randfällen und Supportpfaden.",
+            "Wir skizzieren den kleinsten vollständigen Ablauf, inklusive Account-Setup, Hauptaktionen, Benachrichtigungen, Randfällen und Supportwegen.",
         },
         {
           title: "App-Oberfläche bauen",
           body:
-            "Die App wird mit einem praktischen Stack umgesetzt, mit dem Backend verbunden und auf relevante Gerätegrößen und Zustände geprüft.",
+            "Die App wird mit einem passenden Stack umgesetzt, mit dem Backend verbunden und auf relevante Gerätegrößen und Zustände geprüft.",
         },
         {
-          title: "Release und Iteration vorbereiten",
+          title: "Veröffentlichung und Weiterentwicklung vorbereiten",
           body:
-            "Wir paketieren die App für die Verteilung, schaffen Sichtbarkeit und hinterlassen einen realistischen Plan für Updates nach dem ersten Release.",
+            "Wir bereiten die App für die Verteilung vor, schaffen Sichtbarkeit und hinterlassen einen realistischen Plan für Updates nach der ersten Version.",
         },
       ],
-      fitTitle: "Gut für mobile Arbeit, die eine klare Aufgabe hat.",
+      fitTitle: "Gut für App-Ideen, die eine klare Aufgabe haben.",
       fitBody:
-        "Das ist nicht für spekulative App-Ideen ohne Produktkontext. Es passt zu Teams, die Ablauf, Zielgruppe und geschäftlichen Grund benennen können.",
+        "Das passt nicht zu spekulativen App-Ideen ohne Produktkontext. Es passt zu Teams, die Ablauf, Zielgruppe und geschäftlichen Grund benennen können.",
       fitItems: [
         "Eure Nutzer wiederholen eine Aufgabe so oft, dass der Browser umständlich wirkt.",
         "Euer Team braucht ein zuverlässiges internes Tool für Außendienst, Checklisten, Reporting oder Kundenabläufe.",
-        "Euer Webprodukt ist bereits nützlich und Mobile würde Reibung in einem wichtigen Ablauf entfernen.",
-        "Ihr möchtet einen fokussierten ersten Release statt einer riesigen Roadmap, die sich MVP nennt.",
+        "Euer Webprodukt ist bereits nützlich und eine App würde Reibung in einem wichtigen Ablauf entfernen.",
+        "Ihr möchtet eine fokussierte erste Version statt einer riesigen Roadmap, die nur MVP heißt.",
       ],
       outcomes: [
         {
-          title: "Ein nützlicher erster Release",
+          title: "Eine nützliche erste Version",
           body:
-            "Die App startet um die Abläufe, die zählen, und hat Platz zu wachsen, sobald echte Nutzung beginnt.",
+            "Die App startet mit den Abläufen, die zählen, und hat Platz zu wachsen, sobald echte Nutzung beginnt.",
         },
         {
           title: "Weniger Plattformaufwand",
@@ -339,26 +339,26 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
         {
           title: "Ein verbundenes Produktsystem",
           body:
-            "Mobile, Web, Backend und Assistentenflüsse können konsistent wirken, statt nachträglich zusammengesteckt zu sein.",
+            "App, Web, Backend und Assistentenflüsse können wie ein System wirken, statt nachträglich zusammengesteckt zu sein.",
         },
       ],
       trust: {
         eyebrow: "Worauf wir achten",
-        title: "Keine App aus Prinzip. Nur ein mobiler Ablauf, der sich verdient.",
+        title: "Keine App aus Prinzip. Nur ein Ablauf, der mobil wirklich besser wird.",
         intro:
-          "Wir prüfen früh, ob native App, PWA oder ein besserer Webflow die richtige Antwort ist. Das spart Budget und hält den ersten Release realistisch.",
+          "Wir prüfen früh, ob native App, PWA oder ein besserer Ablauf im Web die richtige Antwort ist. Das spart Budget und hält die erste Version realistisch.",
         items: [
           {
             value: "MVP",
             label: "Kleiner Start",
             body:
-              "Der erste Release bleibt auf den Ablauf fokussiert, der den größten Unterschied macht.",
+              "Die erste Version bleibt auf den Ablauf fokussiert, der den größten Unterschied macht.",
           },
           {
             value: "UX",
             label: "Echte Nutzung",
             body:
-              "Offline-Zustände, Fehler, Berechtigungen und Touch-Wege werden nicht erst am Ende bedacht.",
+              "Offline-Zustände, Fehler, Berechtigungen und Touch-Wege werden früh mitgedacht.",
           },
           {
             value: "Ops",
@@ -372,7 +372,7 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
         {
           question: "Brauchen wir immer eine native App?",
           answer:
-            "Nein. Wenn eine PWA das Problem mit weniger Wartung löst, ist das oft besser. Native lohnt sich, wenn Distribution, Gerätefunktionen, Push oder Offline-Verhalten es rechtfertigen.",
+            "Nein. Wenn eine PWA das Problem mit weniger Wartung löst, ist das oft besser. Nativ lohnt sich, wenn Verteilung, Gerätefunktionen, Push oder Offline-Verhalten es rechtfertigen.",
         },
         {
           question: "Könnt ihr ein bestehendes Backend anbinden?",
@@ -380,19 +380,19 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
             "Ja. Bestehende APIs können genutzt werden, wenn sie stabil genug sind. Falls nicht, braucht das Projekt vielleicht zuerst eine kleine Backend-Aufräumphase.",
         },
         {
-          question: "Kann Mobile vor der Website kommen?",
+          question: "Kann eine App vor der Website kommen?",
           answer:
-            "Manchmal, aber meist klärt die Webbasis zuerst Angebot, Datenmodell und Produktsprache. Mobile funktioniert am besten als Erweiterung eines klaren Kerns.",
+            "Manchmal, aber meist klärt die Webbasis zuerst Angebot, Datenmodell und Produktsprache. Eine App funktioniert am besten als Erweiterung eines klaren Kerns.",
         },
         {
-          question: "Übernehmt ihr Store Submissions?",
+          question: "Übernehmt ihr die Store-Einreichung?",
           answer:
-            "Wir können Builds, Assets, Metadaten, Release-Kanäle und Submission-Vorbereitung übernehmen. Die Account-Inhaberschaft sollte bei euch bleiben.",
+            "Wir können App-Builds, Assets, Metadaten, Release-Kanäle und die Vorbereitung für die Einreichung übernehmen. Die Store-Accounts sollten bei euch bleiben.",
         },
       ],
-      closingTitle: "Mobile nur bauen, wenn es das Produkt einfacher macht.",
+      closingTitle: "Eine App nur bauen, wenn sie das Produkt einfacher macht.",
       closingBody:
-        "Sag uns, was eure Nutzer abseits des Desktops erledigen müssen. Wir helfen zu entscheiden, ob native App, PWA oder zuerst ein besserer Webflow die richtige Antwort ist.",
+        "Sagt uns, was eure Nutzer abseits des Desktops erledigen müssen. Wir helfen zu entscheiden, ob native App, PWA oder zuerst ein besserer Ablauf im Web die richtige Antwort ist.",
     },
   },
   en: {
