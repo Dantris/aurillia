@@ -1,284 +1,244 @@
+// src/components/AurilliaChatWidget.tsx
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { localeFromPathname, localizedPath, stripLocale, type Locale } from "@/lib/i18n";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Message = {
-  role: "user" | "assistant";
-  content: string;
+    role: "user" | "assistant";
+    content: string;
 };
 
 type AssistantMeta = {
-  intent?: string;
-  stage?: "greeting" | "discovery" | "scoping" | "proposal" | "handoff" | string;
-  links?: string[];
+    intent?: string;
+    stage?: "greeting" | "discovery" | "scoping" | "proposal" | "handoff" | string;
+    links?: string[];
 };
 
-const CHAT_COPY: Record<
-  Locale,
-  {
-    title: string;
-    greeting: string;
-    close: string;
-    thinking: string;
-    placeholder: string;
-    send: string;
-    launcher: string;
-    genericError: string;
-    unavailableError: string;
-    quickOptions: { label: string; text: string }[];
-    linkLabels: Record<string, string>;
-  }
-> = {
-  de: {
-    title: "Projektassistent",
-    greeting:
-      "Hallo, ich bin der Aurillia-Assistent. Sag kurz, was du bauen oder verbessern möchtest, und ich helfe dir, den nächsten sinnvollen Schritt zu finden.",
-    close: "Chat schließen",
-    thinking: "Denke nach",
-    placeholder: "Projekt beschreiben",
-    send: "Senden",
-    launcher: "Aurillia fragen",
-    genericError:
-      "Da ist etwas schiefgelaufen. Versuch es gleich erneut oder nutze das Kontaktformular.",
-    unavailableError:
-      "Ich konnte gerade keine Antwort erzeugen. Die Kontaktseite ist weiterhin verfügbar.",
-    quickOptions: [
-      { label: "Website", text: "Ich möchte meine Unternehmenswebsite verbessern oder neu aufbauen." },
-      { label: "Mobile App", text: "Ich möchte prüfen, ob eine mobile App für mein Produkt oder meinen Ablauf sinnvoll ist." },
-      { label: "KI-Assistent", text: "Ich möchte einen KI-Chatbot oder Assistenten auf meiner Website ergänzen." },
-      { label: "Noch unsicher", text: "Ich brauche Hilfe dabei, den richtigen ersten Schritt zu finden." },
-    ],
-    linkLabels: {
-      "/services/web": "Webentwicklung",
-      "/services/mobile": "Mobile Apps",
-      "/contact": "Kontakt",
-    },
-  },
-  en: {
-    title: "Project assistant",
-    greeting:
-      "Hi, I’m the Aurillia assistant. Tell me what you want to build or improve, and I’ll help shape a sensible first step.",
-    close: "Close chat",
-    thinking: "Thinking",
-    placeholder: "Describe the project",
-    send: "Send",
-    launcher: "Ask Aurillia",
-    genericError: "Something went wrong. Try again in a moment, or use the contact form.",
-    unavailableError: "I couldn’t generate a reply right now. The contact page is still available.",
-    quickOptions: [
-      { label: "Website", text: "I want to improve or rebuild my company website." },
-      { label: "Mobile app", text: "I want to explore a mobile app for my product or workflow." },
-      { label: "AI assistant", text: "I want to add an AI chatbot or assistant to my website." },
-      { label: "Not sure yet", text: "I need help deciding what the right first step is." },
-    ],
-    linkLabels: {
-      "/services/web": "Web development",
-      "/services/mobile": "Mobile apps",
-      "/contact": "Contact",
-    },
-  },
+const QUICK_OPTIONS = [
+    { label: "Website", text: "Ich möchte eine moderne Website bauen.", intent: "web" },
+    { label: "App", text: "Ich möchte eine mobile App entwickeln.", intent: "mobile" },
+    { label: "AI-Feature", text: "Ich möchte ein AI-Feature oder einen Chatbot integrieren.", intent: "ai" },
+    { label: "Beratung", text: "Ich brauche erstmal technische Beratung.", intent: "other" }
+];
+
+const LINK_LABELS: Record<string, string> = {
+    "/services/web": "Mehr zu Webprojekten",
+    "/services/mobile": "Mehr zu Mobile Apps",
+    "/services/ai": "Mehr zu AI & Automation",
+    "/aurillia-home": "Aurillia Home (Security)",
+    "/contact": "Kontakt aufnehmen"
 };
 
 export default function AurilliaChatWidget() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const normalizedPathname = stripLocale(pathname ?? "/");
-  const locale = localeFromPathname(pathname);
-  const copy = CHAT_COPY[locale];
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: copy.greeting,
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [meta, setMeta] = useState<AssistantMeta | null>(null);
+    const router = useRouter();
 
-  useEffect(() => {
-    setMessages([{ role: "assistant", content: copy.greeting }]);
-    setInput("");
-    setMeta(null);
-    setLoading(false);
-  }, [copy.greeting]);
-
-  async function sendMessageText(text: string) {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
-
-    const updatedMessages: Message[] = [...messages, { role: "user", content: trimmed }];
-
-    setMessages(updatedMessages);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/aurillia-assistant", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Aurillia-Chat": "1",
-        },
-        body: JSON.stringify({
-          locale,
-          messages: updatedMessages.map((message) => ({
-            role: message.role,
-            content: message.content,
-          })),
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.reply) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.reply as string }]);
-        setMeta({
-          intent: data.intent,
-          stage: data.stage,
-          links: data.links || [],
-        });
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: copy.genericError,
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error(error);
-      setMessages((prev) => [
-        ...prev,
+    const [open, setOpen] = useState(false);
+    const [messages, setMessages] = useState<Message[]>([
         {
-          role: "assistant",
-          content: copy.unavailableError,
-        },
-      ]);
-    } finally {
-      setLoading(false);
+            role: "assistant",
+            content:
+                "Hey, ich bin der Aurillia Assistent. Was möchtest du bauen oder verbessern? Website, App, AI-Feature oder etwas anderes?"
+        }
+    ]);
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [meta, setMeta] = useState<AssistantMeta | null>(null);
+
+    async function sendMessageText(text: string) {
+        const trimmed = text.trim();
+        if (!trimmed || loading) return;
+
+        const updatedMessages: Message[] = [
+            ...messages,
+            { role: "user", content: trimmed }
+        ];
+
+        setMessages(updatedMessages);
+        setInput("");
+        setLoading(true);
+
+        try {
+            const res = await fetch("/api/aurillia-assistant", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    messages: updatedMessages.map(m => ({
+                        role: m.role,
+                        content: m.content
+                    }))
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.reply) {
+                setMessages(prev => [
+                    ...prev,
+                    { role: "assistant", content: data.reply as string }
+                ]);
+                setMeta({
+                    intent: data.intent,
+                    stage: data.stage,
+                    links: data.links || []
+                });
+            } else if (data.error) {
+                setMessages(prev => [
+                    ...prev,
+                    {
+                        role: "assistant",
+                        content:
+                            "Da ist etwas schiefgelaufen. Versuch es bitte gleich noch einmal."
+                    }
+                ]);
+            }
+        } catch (error) {
+            console.error(error);
+            setMessages(prev => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content:
+                        "Ich konnte gerade keine Antwort erzeugen. Versuch es bitte später noch einmal."
+                }
+            ]);
+        } finally {
+            setLoading(false);
+        }
     }
-  }
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    await sendMessageText(input);
-  }
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        await sendMessageText(input);
+    }
 
-  function handleLinkClick(link: string) {
-    setOpen(false);
-    router.push(localizedPath(link, locale));
-  }
+    function handleQuickOption(text: string) {
+        void sendMessageText(text);
+    }
 
-  const showQuickOptions =
-    !loading &&
-    messages.length <= 3 &&
-    (!meta || meta.stage === "greeting" || meta.stage === "discovery");
+    function handleLinkClick(link: string) {
+        setOpen(false);
+        // simple: let Next.js handle navigation
+        router.push(link);
+    }
 
-  if (["/contact", "/impressum", "/datenschutz"].includes(normalizedPathname)) {
-    return null;
-  }
+    const showQuickOptions =
+        !loading &&
+        messages.length <= 3 && // initial phase
+        (!meta || meta.stage === "greeting" || meta.stage === "discovery");
 
-  return (
-    <div className="fixed inset-x-4 bottom-4 z-40 flex flex-col items-end sm:inset-x-auto sm:bottom-6 sm:right-6">
-      {open ? (
-        <div className="mb-3 flex max-h-[min(720px,calc(100vh-6rem))] w-full flex-col overflow-hidden border border-[var(--site-line)] bg-[var(--site-chat-bg)] text-lg text-[var(--site-text)] shadow-[0_24px_90px_var(--site-menu-shadow)] backdrop-blur-xl sm:w-[min(540px,calc(100vw-48px))]">
-          <div className="flex items-start justify-between border-b border-[var(--site-line)] p-5 md:p-6">
-            <div>
-              <p className="font-mono text-sm uppercase tracking-[0.22em] text-[var(--site-cyan)]">
-                Aurillia
-              </p>
-              <p className="mt-2 text-2xl font-semibold leading-tight">{copy.title}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="grid h-11 w-11 place-items-center border border-[var(--site-line)] text-2xl text-[var(--site-muted)] transition hover:text-[var(--site-strong)]"
-              aria-label={copy.close}
-            >
-              ×
-            </button>
-          </div>
+    return (
+        <div className="fixed bottom-5 right-5 z-40">
+            {open && (
+                <div className="mb-3 w-80 max-h-[460px] rounded-3xl border border-default bg-surface/95 text-sm text-foreground shadow-xl shadow-black/40 backdrop-blur-md flex flex-col overflow-hidden">
+                    {/* header */}
+                    <div className="px-4 py-3 border-b border-default flex items-center justify-between">
+                        <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] uppercase tracking-[0.25em] text-muted">
+                                Aurillia
+                            </span>
+                            <span className="text-xs font-medium text-foreground">
+                                Dev Assistant
+                            </span>
+                        </div>
+                        <button
+                            onClick={() => setOpen(false)}
+                            className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-default bg-elev hover:bg-elev/80 text-xs text-muted"
+                        >
+                            ✕
+                        </button>
+                    </div>
 
-          <div className="flex-1 space-y-4 overflow-y-auto p-5 md:p-6">
-            {messages.map((message, index) => (
-              <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[90%] border px-4 py-3 text-[1.05rem] leading-8 whitespace-pre-wrap md:px-5 md:py-4 md:text-lg ${
-                    message.role === "user"
-                      ? "border-[color-mix(in_oklch,var(--site-cyan)_48%,transparent)] bg-[rgba(var(--site-cyan-rgb),.14)] text-[var(--site-strong)]"
-                      : "border-[var(--site-line)] bg-[var(--site-soft-bg)] text-[var(--site-text)]"
-                  }`}
-                >
-                  {message.content}
+                    {/* messages */}
+                    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+                        {messages.map((m, idx) => (
+                            <div
+                                key={idx}
+                                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"
+                                    }`}
+                            >
+                                <div
+                                    className={`rounded-2xl px-3 py-2 max-w-[80%] text-xs leading-relaxed whitespace-pre-wrap transition-transform duration-150 ${m.role === "user"
+                                            ? "bg-emerald-500 text-slate-950"
+                                            : "bg-elev text-foreground border border-default/60"
+                                        }`}
+                                >
+                                    {m.content}
+                                </div>
+                            </div>
+                        ))}
+
+                        {loading && (
+                            <div className="flex items-center gap-2 text-[11px] text-muted pt-1">
+                                <span className="h-1 w-1 rounded-full bg-muted animate-pulse" />
+                                <span>Der Assistent denkt kurz nach …</span>
+                            </div>
+                        )}
+
+                        {/* Quick options in early stage */}
+                        {showQuickOptions && (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                                {QUICK_OPTIONS.map(option => (
+                                    <button
+                                        key={option.label}
+                                        type="button"
+                                        onClick={() => handleQuickOption(option.text)}
+                                        className="rounded-full border border-default bg-elev px-3 py-1 text-[11px] text-muted hover:border-emerald-500 hover:text-foreground hover:bg-elev/80 transition-colors"
+                                    >
+                                        {option.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Links suggested by the assistant */}
+                        {meta?.links && meta.links.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                                {meta.links.map(link => (
+                                    <button
+                                        key={link}
+                                        type="button"
+                                        onClick={() => handleLinkClick(link)}
+                                        className="rounded-full border border-default bg-transparent px-3 py-1 text-[11px] text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500 transition-colors"
+                                    >
+                                        {LINK_LABELS[link] ?? link}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* input */}
+                    <form
+                        onSubmit={handleSubmit}
+                        className="border-t border-default px-3 py-2 flex gap-2 items-center bg-surface"
+                    >
+                        <input
+                            className="flex-1 bg-elev rounded-full px-3 py-1.5 text-xs outline-none border border-default focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/70 placeholder:text-muted"
+                            placeholder="Kurze Beschreibung deines Projekts"
+                            value={input}
+                            onChange={e => setInput(e.target.value)}
+                        />
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-3 py-1.5 text-[11px] font-medium text-slate-950 shadow-sm shadow-emerald-500/40 disabled:opacity-60"
+                        >
+                            Senden
+                        </button>
+                    </form>
                 </div>
-              </div>
-            ))}
+            )}
 
-            {loading ? (
-              <div className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.16em] text-[var(--site-cyan)]">
-                <span className="h-1.5 w-1.5 animate-pulse bg-[var(--site-cyan)]" />
-                {copy.thinking}
-              </div>
-            ) : null}
-
-            {showQuickOptions ? (
-              <div className="grid gap-2 pt-1">
-                {copy.quickOptions.map((option) => (
-                  <button
-                    key={option.label}
-                    type="button"
-                    onClick={() => void sendMessageText(option.text)}
-                    className="border border-[var(--site-line)] bg-[var(--site-subtle-bg)] px-4 py-3 text-left text-[1.05rem] font-semibold leading-7 text-[var(--site-text)] transition hover:border-[color-mix(in_oklch,var(--site-cyan)_42%,transparent)] hover:text-[var(--site-strong)] md:px-5 md:py-4 md:text-lg"
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-
-            {meta?.links?.length ? (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {meta.links.map((link) => (
-                  <button
-                    key={link}
-                    type="button"
-                    onClick={() => handleLinkClick(link)}
-                    className="border border-[color-mix(in_oklch,var(--site-cyan)_32%,transparent)] px-3 py-2 font-mono text-sm uppercase tracking-[0.16em] text-[var(--site-cyan)] transition hover:bg-[rgba(var(--site-cyan-rgb),.08)]"
-                  >
-                    {copy.linkLabels[link] ?? link}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3 border-t border-[var(--site-line)] p-4 sm:flex-row md:p-5">
-            <input
-              className="min-w-0 flex-1 border border-[var(--site-line)] bg-[var(--site-soft-bg)] px-4 py-3 text-lg text-[var(--site-strong)] outline-none placeholder:text-[var(--site-muted-2)] focus:border-[color-mix(in_oklch,var(--site-cyan)_55%,transparent)] md:px-5 md:py-4"
-              placeholder={copy.placeholder}
-              value={input}
-              maxLength={700}
-              onChange={(event) => setInput(event.target.value)}
-            />
-            <button type="submit" disabled={loading} className="site-button site-button-primary min-h-[3.25rem] px-5 py-4 text-lg disabled:opacity-55">
-              {copy.send}
-            </button>
-          </form>
+            {!open && (
+                <button
+                    onClick={() => setOpen(true)}
+                    className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/40 border border-emerald-400/70 hover:bg-emerald-400"
+                >
+                    <span className="h-2 w-2 rounded-full bg-emerald-900" />
+                    Chat mit Aurillia
+                </button>
+            )}
         </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-3 border border-[color-mix(in_oklch,var(--site-cyan)_48%,transparent)] bg-[var(--site-chat-bg)] px-5 py-4 text-lg font-semibold text-[var(--site-strong)] shadow-[0_16px_60px_var(--site-floating-shadow)] backdrop-blur-xl transition hover:bg-[rgba(var(--site-cyan-rgb),.1)]"
-        >
-          <span className="h-2 w-2 bg-[var(--site-cyan)]" />
-          {copy.launcher}
-        </button>
-      )}
-    </div>
-  );
+    );
 }

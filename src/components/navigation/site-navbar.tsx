@@ -1,578 +1,769 @@
+// src/components/navigation/site-navbar.tsx
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 import React, { useEffect, useRef, useState } from "react";
-import { localeFromPathname, localizedPath, stripLocale, switchLocalePath, type Locale } from "@/lib/i18n";
+import { usePathname } from "next/navigation";
+import ThemeToggle from "./theme-toggle";
+import { LOCALE_COOKIE, type Locale } from "@/i18n/config";
 
-type ServiceItem = {
-  title: string;
-  href: string;
-  description: string;
-  highlights: string[];
-};
+type Item = { title: string; href: string; description?: string };
 
-const SERVICES: Record<Locale, ServiceItem[]> = {
-  de: [
+const SERVICES: Item[] = [
     {
-      title: "Webentwicklung",
-      href: "/services/web",
-      description: "Websites, Relaunches und Leistungsseiten, die euer Angebot schneller verständlich machen.",
-      highlights: ["Website", "SEO", "Start"],
+        title: "Web Development",
+        href: "/services/web",
+        description:
+            "Calm, fast marketing sites and product pages with a stack you own.",
     },
     {
-      title: "Mobile Apps",
-      href: "/services/mobile",
-      description: "PWA, App oder mobiler Ablauf, wenn der Browser zu umständlich wird.",
-      highlights: ["iOS", "Android", "PWA"],
+        title: "Mobile Apps",
+        href: "/services/mobile",
+        description:
+            "React Native / Expo or PWA—one codebase for iOS, Android, and web.",
     },
     {
-      title: "KI-Assistenten",
-      href: "/contact?interest=AI%20Chatbot%20%2F%20Assistant",
-      description: "Chatbots, Projektberater und hilfreiche KI-Assistenz für Websites.",
-      highlights: ["Chat", "Wissen", "Leads"],
+        title: "Full-Stack Systems",
+        href: "/services/fullstack",
+        description: "Dashboards, portals, and tools that run your operations.",
     },
     {
-      title: "Website-Betreuung",
-      href: "/contact?interest=Website%20Care",
-      description: "Pflege, Inhalte, Analytics und kleine Verbesserungen nach dem Start.",
-      highlights: ["Inhalte", "Analytics", "Pflege"],
-    },
-  ],
-  en: [
-    {
-      title: "Web Development",
-      href: "/services/web",
-      description: "Websites, relaunches, and service pages that are understood faster.",
-      highlights: ["Website", "SEO", "Launch"],
+        title: "Hardware & IoT",
+        href: "/services/hardware",
+        description: "Nodes, hubs, and control apps for spaces and devices.",
     },
     {
-      title: "Mobile Apps",
-      href: "/services/mobile",
-      description: "PWA, app, or mobile workflow when the browser is not enough.",
-      highlights: ["iOS", "Android", "PWA"],
+        title: "Cloud & AWS",
+        href: "/services/cloud",
+        description: "Hosting, monitoring, and migrations without surprises.",
     },
     {
-      title: "AI Assistants",
-      href: "/contact?interest=AI%20Chatbot%20%2F%20Assistant",
-      description: "Chatbots, project advisors, and useful AI paths for websites.",
-      highlights: ["Chat", "Knowledge", "Leads"],
+        title: "AI & Automation",
+        href: "/services/ai",
+        description: "Assistants and workflows that actually save you time.",
     },
-    {
-      title: "Website Care",
-      href: "/contact?interest=Website%20Care",
-      description: "Maintenance, content, analytics, and small improvements after launch.",
-      highlights: ["Content", "Analytics", "Care"],
-    },
-  ],
-};
+];
 
-const NAV_COPY = {
-  de: {
-    services: "Leistungen",
-    contact: "Kontakt",
-    switchLanguage: "Zur englischen Version wechseln",
-    toggleMenu: "Menü öffnen",
-    closeMenu: "Menü schließen",
-    mobileInfoTitle: "Die meisten Projekte starten im Web",
-    mobileInfoBody:
-      "Eine klare Website gibt App- und KI-Projekten eine stabilere Grundlage.",
-    developmentTitle: "So greift es ineinander",
-    developmentBody:
-      "Website, Inhalte, Technik und Betreuung gehören zusammen. Apps und KI kommen dazu, wenn sie einen echten Ablauf leichter machen.",
-    flow: ["Struktur", "Text", "Design", "Umsetzung", "Start"],
-    support: ["SEO", "Formulare", "Analytics", "Pflege"],
-    openWeb: "Webentwicklung öffnen",
-  },
-  en: {
-    services: "Services",
-    contact: "Contact",
-    switchLanguage: "Zu Deutsch wechseln",
-    toggleMenu: "Toggle menu",
-    closeMenu: "Close menu",
-    mobileInfoTitle: "Most projects start on web",
-    mobileInfoBody:
-      "A clear website gives mobile and AI assistant work a stronger foundation.",
-    developmentTitle: "How it fits together",
-    developmentBody:
-      "Website, content, engineering, and care belong together. Mobile and AI are added when they make a real workflow easier.",
-    flow: ["Structure", "Copy", "Design", "Build", "Launch"],
-    support: ["SEO", "Forms", "Analytics", "Care"],
-    openWeb: "Open web development",
-  },
-} satisfies Record<
-  Locale,
-  {
-    services: string;
-    contact: string;
-    switchLanguage: string;
-    toggleMenu: string;
-    closeMenu: string;
-    mobileInfoTitle: string;
-    mobileInfoBody: string;
-    developmentTitle: string;
-    developmentBody: string;
-    flow: string[];
-    support: string[];
-    openWeb: string;
-  }
->;
+const AURILLIA: Item[] = [
+    { title: "Aurillia Core", href: "/aur/core", description: "Backend brain of the system" },
+    { title: "Aurillia Node", href: "/aur/node", description: "Wireless sensor & camera modules" },
+    { title: "Aurillia Sense", href: "/aur/sense", description: "Motion, battery & environment monitoring" },
+    { title: "Aurillia Link", href: "/aur/link", description: "Lightweight secure protocol" },
+    { title: "Aurillia Watch", href: "/aur/watch", description: "App for control & monitoring" },
+];
 
-type OpenMenu = null | "services";
-type ThemeName = "dark" | "light";
-
-const THEME_STORAGE_KEY = "aurillia-theme-v2";
-
-function applyTheme(theme: ThemeName) {
-  const root = document.documentElement;
-  root.dataset.theme = theme;
-  root.style.colorScheme = theme;
-
-  try {
-    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-  } catch {
-    // Theme preference still applies for the current page when storage is unavailable.
-  }
-
-  window.dispatchEvent(new CustomEvent<ThemeName>("aurillia-theme-change", { detail: theme }));
-}
+type OpenMenu = null | "services" | "aurillia";
 
 export default function SiteNavbar() {
-  const pathname = usePathname();
-  const navRef = useRef<HTMLElement>(null);
+    const pathname = usePathname();
+    const [open, setOpen] = useState<OpenMenu>(null);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [mobileSub, setMobileSub] = useState<OpenMenu>(null);
+    const navRef = useRef<HTMLElement>(null);
 
-  const [open, setOpen] = useState<OpenMenu>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const locale = localeFromPathname(pathname);
-  const copy = NAV_COPY[locale];
-  const services = SERVICES[locale];
-  const inServices = stripLocale(pathname ?? "").startsWith("/services");
-
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(null);
-        setMobileOpen(false);
-      }
-    };
-
-    const onClick = (event: MouseEvent) => {
-      if (!navRef.current?.contains(event.target as Node)) {
-        setOpen(null);
-      }
-    };
-
-    window.addEventListener("keydown", onKey);
-    window.addEventListener("mousedown", onClick);
-
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("mousedown", onClick);
-    };
-  }, []);
-
-  useEffect(() => {
-    setOpen(null);
-    setMobileOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    const html = document.documentElement;
-    const previous = html.style.overflow;
-
-    if (mobileOpen) {
-      html.style.overflow = "hidden";
-    }
-
-    return () => {
-      html.style.overflow = previous;
-    };
-  }, [mobileOpen]);
-
-  return (
-    <>
-      <nav
-        ref={navRef}
-        className="sticky top-0 z-50 w-full border-b border-[var(--site-line)] text-[var(--site-text)] backdrop-blur-xl [background:var(--site-nav-bg)]"
-      >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-[76px] sm:px-6 md:h-[86px] md:px-10">
-          <Link href={localizedPath("/", locale)} className="flex min-w-0 items-center gap-2 text-[var(--site-strong)] sm:gap-3">
-            <img src="/icon.svg" alt="Aurillia" className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" aria-hidden="true" />
-            <span className="truncate text-[1rem] font-semibold tracking-[0.07em] sm:text-[1.08rem] md:text-[1.18rem]">
-              AURILLIA
-            </span>
-          </Link>
-
-          <div className="hidden items-center gap-8 md:flex">
-            <button
-              id="services-trigger"
-              aria-haspopup="menu"
-              aria-expanded={open === "services"}
-              aria-controls="services-panel"
-              type="button"
-              onMouseEnter={() => setOpen("services")}
-              onFocus={() => setOpen("services")}
-              onClick={() =>
-                setOpen((current) => (current === "services" ? null : "services"))
-              }
-              className={`inline-flex items-center gap-2 text-base font-medium transition ${
-                open === "services" || inServices
-                  ? "text-[var(--site-strong)]"
-                  : "text-[var(--site-muted)] hover:text-[var(--site-strong)]"
-              }`}
-            >
-              {copy.services}
-              <span
-                className={`text-sm transition-transform duration-200 ${
-                  open === "services" ? "rotate-180" : ""
-                }`}
-                aria-hidden="true"
-              >
-                ˅
-              </span>
-            </button>
-
-            <Link
-              href={localizedPath("/contact", locale)}
-              className="nav-contact-button"
-            >
-              {copy.contact}
-            </Link>
-
-            <LanguageToggle locale={locale} pathname={pathname ?? "/"} label={copy.switchLanguage} />
-            <ThemeToggle locale={locale} />
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3 md:hidden">
-            <LanguageToggle locale={locale} pathname={pathname ?? "/"} label={copy.switchLanguage} compact />
-            <ThemeToggle locale={locale} compact />
-            <button
-              type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--site-line)] bg-[var(--site-soft-bg)] text-[var(--site-strong)] transition hover:bg-[var(--site-soft-bg-hover)] sm:h-11 sm:w-11"
-              aria-label={mobileOpen ? copy.closeMenu : copy.toggleMenu}
-              aria-expanded={mobileOpen}
-              onClick={() => {
-                setMobileOpen((prev) => !prev);
+    // Close on Escape / outside click
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
                 setOpen(null);
-              }}
-            >
-              <Burger open={mobileOpen} />
-            </button>
-          </div>
-        </div>
+                setMobileSub(null);
+                setMobileOpen(false);
+            }
+        };
+        const onClick = (e: MouseEvent) => {
+            if (!navRef.current?.contains(e.target as Node)) {
+                setOpen(null);
+                setMobileSub(null);
+            }
+        };
+        window.addEventListener("keydown", onKey);
+        window.addEventListener("mousedown", onClick);
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            window.removeEventListener("mousedown", onClick);
+        };
+    }, []);
 
-        <DesktopServicesMenu
-          open={open === "services"}
-          onClose={() => setOpen(null)}
-          locale={locale}
-          services={services}
-          copy={copy}
-        />
-      </nav>
+    // Close menus when the route changes
+    useEffect(() => {
+        setOpen(null);
+        setMobileSub(null);
+        setMobileOpen(false);
+    }, [pathname]);
 
-      <div
-        className={`fixed inset-x-0 bottom-0 top-16 z-40 bg-[var(--site-overlay)] transition-opacity sm:top-[76px] md:hidden ${
-          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        aria-hidden="true"
-        onClick={() => setMobileOpen(false)}
-      />
+    // Lock body scroll when mobile slide-down is open
+    useEffect(() => {
+        const el = document.documentElement;
+        if (mobileOpen) {
+            const prev = el.style.overflow;
+            el.style.overflow = "hidden";
+            return () => {
+                el.style.overflow = prev;
+            };
+        }
+    }, [mobileOpen]);
 
-      {mobileOpen ? (
-        <div
-          className="fixed inset-x-0 bottom-0 top-16 z-50 border-t border-[var(--site-line)] bg-[var(--site-mobile-panel-bg)] sm:top-[76px] md:hidden"
+    const inServices = pathname?.startsWith("/services") ?? false;
+    const inAur = pathname?.startsWith("/aur") ?? false;
+
+    return (
+        <nav
+            ref={navRef}
+            className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-[#f7f7f8]/95 text-slate-900 backdrop-blur shadow-sm supports-[backdrop-filter]:bg-[#f7f7f8]/90"
+            onMouseLeave={() => setOpen(null)}
         >
-          <div className="mx-auto flex h-full max-w-7xl flex-col overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
-            <p className="mb-4 font-mono text-sm uppercase tracking-[0.22em] text-[var(--site-cyan)]">
-              {copy.services}
-            </p>
-
-            <div className="space-y-3">
-              {services.map((item) => (
+            {/* top bar */}
+            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:h-20 md:px-8">
+                {/* Brand */}
                 <Link
-                  key={item.href}
-                  href={localizedPath(item.href, locale)}
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-lg border border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] p-4 transition hover:bg-[var(--site-soft-bg-hover)] sm:p-5"
+                    href="/"
+                    className="relative flex items-center gap-2 font-semibold tracking-tight text-slate-900"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-lg font-semibold text-[var(--site-strong)]">{item.title}</p>
-                      <p className="mt-2 text-base leading-7 text-[var(--site-muted)]">
-                        {item.description}
-                      </p>
-                    </div>
-                    <span className="text-[var(--site-muted-2)]">›</span>
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {item.highlights.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] px-3 py-1 text-sm text-[var(--site-muted)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                    <span className="relative inline-block h-2.5 w-2.5 rounded-full bg-orange-500" />
+                    <span className="relative text-xl leading-none">AURILLIA</span>
                 </Link>
-              ))}
-            </div>
 
-            <div className="mt-5 rounded-lg border border-[color-mix(in_oklch,var(--site-cyan)_24%,transparent)] bg-[rgba(var(--site-cyan-rgb),.06)] p-4 sm:mt-6 sm:p-5">
-              <p className="text-base font-semibold text-[var(--site-strong)]">{copy.mobileInfoTitle}</p>
-              <p className="mt-2 text-base leading-7 text-[var(--site-muted)]">
-                {copy.mobileInfoBody}
-              </p>
-            </div>
+                {/* Desktop links */}
+                <div className="hidden items-center gap-7 md:flex">
+                    <ThemeToggle />
+                    <LanguageToggle />
 
-            <Link
-              href={localizedPath("/contact", locale)}
-              onClick={() => setMobileOpen(false)}
-              className="nav-contact-button mt-6 w-full"
-            >
-              {copy.contact}
-            </Link>
-          </div>
-        </div>
-      ) : null}
-    </>
-  );
-}
+                    <MenuTrigger
+                        id="services-trigger"
+                        controlsId="services-panel"
+                        label="Services"
+                        open={open === "services"}
+                        active={inServices}
+                        onOpen={() => setOpen("services")}
+                        onToggle={() =>
+                            setOpen((s) => (s === "services" ? null : "services"))
+                        }
+                    />
 
-function LanguageToggle({
-  locale,
-  pathname,
-  label,
-  compact = false,
-}: {
-  locale: Locale;
-  pathname: string;
-  label: string;
-  compact?: boolean;
-}) {
-  const nextLocale: Locale = locale === "de" ? "en" : "de";
+                    <span className="h-4 w-px bg-slate-200" aria-hidden />
 
-  return (
-    <Link
-      href={switchLocalePath(pathname, nextLocale)}
-      className={`inline-flex items-center justify-center rounded-full border border-[var(--site-line)] bg-[var(--site-soft-bg)] font-mono font-semibold uppercase tracking-[0.08em] text-[var(--site-strong)] transition hover:bg-[var(--site-soft-bg-hover)] ${
-        compact ? "h-10 min-w-10 px-2 text-[0.78rem] sm:h-11 sm:min-w-11 sm:px-3 sm:text-sm" : "h-11 min-w-[52px] px-3 text-sm"
-      }`}
-      aria-label={label}
-      title={label}
-      hrefLang={nextLocale}
-    >
-      {nextLocale.toUpperCase()}
-    </Link>
-  );
-}
+                    <MenuTrigger
+                        id="aurillia-trigger"
+                        controlsId="aurillia-panel"
+                        label="Aurillia"
+                        open={open === "aurillia"}
+                        active={inAur}
+                        onOpen={() => setOpen("aurillia")}
+                        onToggle={() =>
+                            setOpen((s) => (s === "aurillia" ? null : "aurillia"))
+                        }
+                    />
 
-function ThemeToggle({ locale, compact = false }: { locale: Locale; compact?: boolean }) {
-  const [theme, setTheme] = useState<ThemeName>("dark");
-
-  useEffect(() => {
-    const syncTheme = () => {
-      const activeTheme =
-        document.documentElement.dataset.theme === "light" ? "light" : "dark";
-      setTheme(activeTheme);
-    };
-
-    const onThemeChange = (event: Event) => {
-      const next = (event as CustomEvent<ThemeName>).detail;
-      setTheme(next === "light" ? "light" : "dark");
-    };
-
-    syncTheme();
-    window.addEventListener("aurillia-theme-change", onThemeChange);
-
-    return () => {
-      window.removeEventListener("aurillia-theme-change", onThemeChange);
-    };
-  }, []);
-
-  const nextTheme = theme === "light" ? "dark" : "light";
-  const label =
-    locale === "de"
-      ? nextTheme === "light"
-        ? "Hellmodus aktivieren"
-        : "Dunkelmodus aktivieren"
-      : `Switch to ${nextTheme} mode`;
-  return (
-    <button
-      type="button"
-      className={`theme-toggle ${compact ? "theme-toggle-compact" : ""}`}
-      aria-label={label}
-      aria-pressed={theme === "light"}
-      title={label}
-      onClick={() => {
-        const current =
-          document.documentElement.dataset.theme === "light" ? "light" : "dark";
-        applyTheme(current === "light" ? "dark" : "light");
-      }}
-    >
-      <span className="theme-toggle-icon" aria-hidden="true" />
-    </button>
-  );
-}
-
-function DesktopServicesMenu({
-  open,
-  onClose,
-  locale,
-  services,
-  copy,
-}: {
-  open: boolean;
-  onClose: () => void;
-  locale: Locale;
-  services: ServiceItem[];
-  copy: (typeof NAV_COPY)[Locale];
-}) {
-  return (
-    <div
-      id="services-panel"
-      role="menu"
-      aria-labelledby="services-trigger"
-      aria-hidden={!open}
-      className={`absolute inset-x-0 top-full z-40 hidden border-t border-[var(--site-line)] shadow-[0_28px_90px_var(--site-menu-shadow)] transition-all duration-200 [background:var(--site-nav-panel-bg)] md:block ${
-        open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
-      }`}
-    >
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-8 md:px-10 lg:grid-cols-[1.75fr_.95fr]">
-        <div>
-          <p className="mb-6 font-mono text-sm uppercase tracking-[0.22em] text-[var(--site-cyan)]">
-            AURILLIA
-          </p>
-
-          <div className="grid gap-x-9 gap-y-7 sm:grid-cols-2">
-            {services.map((item) => (
-              <Link
-                key={item.href}
-                href={localizedPath(item.href, locale)}
-                onClick={onClose}
-                role="menuitem"
-                className="group -mx-3 rounded-lg px-3 py-2 transition hover:bg-[var(--site-soft-bg-hover)]"
-              >
-                <div className="grid grid-cols-[1fr_auto] gap-4">
-                  <div>
-                    <p className="text-base font-semibold text-[var(--site-strong)]">{item.title}</p>
-                    <p className="mt-1 max-w-[34ch] text-sm leading-6 text-[var(--site-muted)]">
-                      {item.description}
-                    </p>
-
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {item.highlights.map((tag, index) => (
-                        <span
-                          key={tag}
-                          className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
-                            index === 0
-                              ? "border-[color-mix(in_oklch,var(--site-cyan)_28%,transparent)] bg-[rgba(var(--site-cyan-rgb),.1)] text-[var(--site-cyan)]"
-                              : "border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] text-[var(--site-muted)]"
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <span className="mt-1 text-lg text-[var(--site-muted-2)] transition group-hover:translate-x-0.5 group-hover:text-[var(--site-strong)]">
-                    ›
-                  </span>
+                    {/* Contact pill stays as-is */}
+                    <Link
+                        href="/contact"
+                        className={`pill-accent text-sm ${pathname === "/contact"
+                            ? "ring-2 ring-orange-400/60"
+                            : ""
+                            }`}
+                    >
+                        Contact
+                    </Link>
                 </div>
-              </Link>
-            ))}
-          </div>
-        </div>
 
-        <div className="rounded-lg border border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] p-5">
-          <p className="text-base font-semibold text-[var(--site-strong)]">{copy.developmentTitle}</p>
-
-          <p className="mt-2 text-base leading-7 text-[var(--site-muted)]">
-            {copy.developmentBody}
-          </p>
-
-          <div className="mt-5 rounded-lg border border-[var(--site-soft-line)] bg-[var(--site-subtle-bg)] p-3">
-            <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--site-muted)]">
-              {copy.flow.map((step, index) => (
-                <React.Fragment key={step}>
-                  <FlowPill tone={index === 0 ? "cyan" : undefined}>{step}</FlowPill>
-                  {index < copy.flow.length - 1 ? <FlowArrow /> : null}
-                </React.Fragment>
-              ))}
+                {/* Mobile: theme / language + burger */}
+                <div className="flex items-center gap-2 md:hidden">
+                    <ThemeToggle />
+                    <LanguageToggle compact />
+                    <button
+                        className="relative z-50 inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 shadow-sm"
+                        aria-label="Toggle menu"
+                        aria-expanded={mobileOpen}
+                        onClick={() => {
+                            setMobileOpen((s) => !s);
+                            setMobileSub(null);
+                        }}
+                        type="button"
+                    >
+                        <span className="sr-only">Open menu</span>
+                        <Burger open={mobileOpen} />
+                    </button>
+                </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {copy.support.map((item) => (
-                <SupportPill key={item}>{item}</SupportPill>
-              ))}
-            </div>
-          </div>
+            {/* Desktop mega menus */}
+            <MegaMenu
+                open={open === "services"}
+                onClose={() => setOpen(null)}
+                heading="Services"
+                items={SERVICES}
+                panelId="services-panel"
+                labelledById="services-trigger"
+            />
+            <MegaMenu
+                open={open === "aurillia"}
+                onClose={() => setOpen(null)}
+                heading="Aurillia"
+                items={AURILLIA}
+                rightSlot={<AurilliaOverviewCard onClose={() => setOpen(null)} />}
+                panelId="aurillia-panel"
+                labelledById="aurillia-trigger"
+            />
 
-          <Link
-            href={localizedPath("/services/web", locale)}
-            onClick={onClose}
-            className="nav-panel-cta mt-5"
-          >
-            {copy.openWeb}
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+            {/* ---------- Mobile DROPDOWNS (tap labels) ---------- */}
+            <div className="md:hidden">
+                <MobileTopRow
+                    onOpen={(which) => {
+                        setMobileSub((cur) => (cur === which ? null : which));
+                        setMobileOpen(false);
+                    }}
+                    active={mobileSub}
+                />
+                <MobileDropdown
+                    open={mobileSub === "services"}
+                    heading="Services"
+                    items={SERVICES}
+                    onClose={() => setMobileSub(null)}
+                />
+                <MobileDropdown
+                    open={mobileSub === "aurillia"}
+                    heading="Aurillia"
+                    items={AURILLIA}
+                    onClose={() => setMobileSub(null)}
+                    rightSlot={
+                        <AurilliaOverviewCard onClose={() => setMobileSub(null)} />
+                    }
+                />
+            </div>
+
+            {/* ---------- Mobile slide-down panel (hamburger) ---------- */}
+            {/* Backdrop */}
+            <div
+                className={`fixed inset-0 bg-black/20 transition-opacity md:hidden ${mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
+                aria-hidden="true"
+                onClick={() => setMobileOpen(false)}
+            />
+            {/* Panel */}
+            <div
+                className={`fixed inset-x-0 top-16 bottom-0 z-50 border-t border-slate-200 bg-white transition-transform duration-300 md:hidden ${mobileOpen ? "translate-y-0" : "-translate-y-full"
+                    }`}
+            >
+                <div className="mx-auto flex h-full max-w-7xl flex-col overflow-y-auto overscroll-contain px-4 py-6">
+                    <ul className="space-y-2">
+                        <MobileGroup
+                            title="Services"
+                            items={SERVICES}
+                            close={() => setMobileOpen(false)}
+                        />
+                        <MobileGroup
+                            title="Aurillia"
+                            items={AURILLIA}
+                            close={() => setMobileOpen(false)}
+                        />
+                    </ul>
+
+                    <div className="mt-6">
+                        <Link
+                            href="/contact"
+                            onClick={() => setMobileOpen(false)}
+                            className="inline-flex w-full items-center justify-center rounded-full bg-orange-600 px-4 py-3 text-base font-medium text-white shadow hover:bg-orange-500"
+                        >
+                            Contact
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
 }
 
-function FlowPill({
-  children,
-  tone,
+/* ---------- sub-components ---------- */
+
+function MenuTrigger({
+    label,
+    open,
+    onOpen,
+    onToggle,
+    id,
+    controlsId,
+    active,
 }: {
-  children: React.ReactNode;
-  tone?: "cyan";
+    label: string;
+    open: boolean;
+    onOpen: () => void;
+    onToggle: () => void;
+    id: string;
+    controlsId: string;
+    active?: boolean;
 }) {
-  const classes =
-    tone === "cyan"
-      ? "border-[color-mix(in_oklch,var(--site-cyan)_24%,transparent)] bg-[rgba(var(--site-cyan-rgb),.1)] text-[var(--site-cyan)]"
-      : "border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] text-[var(--site-strong)]";
+    const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpen();
+            const first = document
+                .getElementById(controlsId)
+                ?.querySelector<HTMLAnchorElement>('a[role="menuitem"]');
+            first?.focus();
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            onOpen();
+            const items = Array.from(
+                document
+                    .getElementById(controlsId)
+                    ?.querySelectorAll<HTMLAnchorElement>('a[role="menuitem"]') ??
+                []
+            );
+            items[items.length - 1]?.focus();
+        }
+    };
 
-  return (
-    <span className={`rounded-full border px-3 py-1.5 text-sm font-medium ${classes}`}>
-      {children}
-    </span>
-  );
+    return (
+        <button
+            id={id}
+            aria-haspopup="menu"
+            aria-expanded={open}
+            aria-controls={controlsId}
+            className={`group inline-flex items-center gap-1 text-[0.94rem] font-medium ${open || active
+                ? "text-slate-900"
+                : "text-slate-600 hover:text-slate-900"
+                }`}
+            onMouseEnter={onOpen}
+            onFocus={onOpen}
+            onClick={onToggle}
+            onKeyDown={onKeyDown}
+            type="button"
+        >
+            {label}
+            <svg
+                className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""
+                    }`}
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+            >
+                <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
+            </svg>
+        </button>
+    );
 }
 
-function SupportPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded-full border border-[var(--site-soft-line)] bg-[var(--site-soft-bg)] px-3 py-1.5 text-sm text-[var(--site-muted)]">
-      {children}
-    </span>
-  );
+function MegaMenu({
+    open,
+    onClose,
+    heading,
+    items,
+    rightSlot,
+    panelId,
+    labelledById,
+}: {
+    open: boolean;
+    onClose: () => void;
+    heading: string;
+    items: Item[];
+    rightSlot?: ReactNode;
+    panelId: string;
+    labelledById: string;
+}) {
+    const listRef = useRef<HTMLUListElement>(null);
+
+    useEffect(() => {
+        if (open) {
+            const first = listRef.current?.querySelector<HTMLAnchorElement>(
+                'a[role="menuitem"]'
+            );
+            first?.focus();
+        }
+    }, [open]);
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "Escape") {
+            e.preventDefault();
+            onClose();
+            return;
+        }
+        const itemsEls = Array.from(
+            listRef.current?.querySelectorAll<HTMLAnchorElement>(
+                'a[role="menuitem"]'
+            ) ?? []
+        );
+        if (!itemsEls.length) return;
+
+        const i = itemsEls.indexOf(document.activeElement as HTMLAnchorElement);
+        const focusAt = (idx: number) => itemsEls[idx]?.focus();
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            focusAt((i + 1 + itemsEls.length) % itemsEls.length);
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            focusAt((i - 1 + itemsEls.length) % itemsEls.length);
+        } else if (e.key === "Home") {
+            e.preventDefault();
+            focusAt(0);
+        } else if (e.key === "End") {
+            e.preventDefault();
+            focusAt(itemsEls.length - 1);
+        } else if (e.key === "Tab") {
+            onClose();
+        }
+    };
+
+    return (
+        <div role="none" className="relative hidden md:block">
+            <div
+                id={panelId}
+                role="menu"
+                aria-labelledby={labelledById}
+                aria-hidden={!open}
+                onKeyDown={onKeyDown}
+                className={`absolute left-0 right-0 origin-top border-t border-slate-200 bg-white/97 shadow-md shadow-slate-200/70 transition-all duration-200 ${open
+                    ? "pointer-events-auto translate-y-0 opacity-100"
+                    : "pointer-events-none -translate-y-2 opacity-0"
+                    }`}
+            >
+                <div className="mx-auto grid max-w-7xl grid-cols-12 gap-8 px-6 py-8">
+                    {/* left: links */}
+                    <div className="col-span-8">
+                        <p className="mb-3 text-xs uppercase tracking-[0.22em] text-slate-500">
+                            {heading}
+                        </p>
+                        <ul
+                            ref={listRef}
+                            role="none"
+                            className="grid grid-cols-2 gap-2 lg:grid-cols-3"
+                        >
+                            {items.map((it) => (
+                                <li key={it.href} role="none">
+                                    <Link
+                                        href={it.href}
+                                        onClick={onClose}
+                                        role="menuitem"
+                                        tabIndex={open ? 0 : -1}
+                                        className="group block rounded-lg px-3 py-2 hover:bg-slate-50"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium text-slate-900 group-hover:text-slate-950">
+                                                {it.title}
+                                            </span>
+                                            <span
+                                                aria-hidden
+                                                className="text-slate-400 group-hover:text-slate-600"
+                                            >
+                                                ›
+                                            </span>
+                                        </div>
+                                        {it.description && (
+                                            <p className="mt-1 line-clamp-2 text-xs text-slate-500">
+                                                {it.description}
+                                            </p>
+                                        )}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* right: CTA / helper */}
+                    <div className="col-span-4">
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                            {rightSlot ?? (
+                                <>
+                                    <p className="text-sm font-medium text-slate-900">
+                                        Can’t find what you need?
+                                    </p>
+                                    <p className="mt-1 text-sm text-slate-600">
+                                        Send a short note and we&apos;ll work out the best
+                                        approach.
+                                    </p>
+                                    <Link
+                                        href="/contact"
+                                        onClick={onClose}
+                                        className="mt-4 inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                                    >
+                                        hello@aurillia.de
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
-function FlowArrow() {
-  return <span className="text-[var(--site-muted-2)]">→</span>;
+function AurilliaOverviewCard({ onClose }: { onClose: () => void }) {
+    return (
+        <>
+            <p className="text-sm font-semibold text-slate-900">
+                See how it fits together
+            </p>
+            <p className="mt-1 text-[0.9rem] leading-relaxed text-slate-650">
+                Core, Node, Sense, Link, and Watch as one local-first stack.
+            </p>
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-700">
+                    <span className="rounded-full bg-emerald-500/12 px-3 py-1 text-[0.78rem] font-medium text-emerald-700">
+                        Core
+                    </span>
+                    <span>↔</span>
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.78rem]">
+                        Node
+                    </span>
+                    <span>•</span>
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.78rem]">
+                        Sense
+                    </span>
+                    <span>•</span>
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.78rem]">
+                        Link
+                    </span>
+                    <span>•</span>
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.78rem]">
+                        Watch
+                    </span>
+                </div>
+            </div>
+            <Link
+                href="/aur/overview"
+                onClick={onClose}
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+                Open overview
+            </Link>
+        </>
+    );
+}
+
+function MobileGroup({
+    title,
+    items,
+    close,
+}: {
+    title: string;
+    items: Item[];
+    close: () => void;
+}) {
+    const [open, setOpen] = useState(false);
+    return (
+        <li className="rounded-lg">
+            <button
+                className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-lg text-slate-900 hover:bg-slate-50"
+                onClick={() => setOpen((s) => !s)}
+                aria-expanded={open}
+                type="button"
+            >
+                {title}
+                <svg
+                    className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""
+                        }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                >
+                    <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
+                </svg>
+            </button>
+            <ul
+                className={`grid overflow-hidden pl-2 transition-[grid-template-rows] ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                    }`}
+            >
+                <li className="min-h-0">
+                    <div className="space-y-1 pb-2 pt-1">
+                        {items.map((it) => (
+                            <Link
+                                key={it.href}
+                                href={it.href}
+                                onClick={close}
+                                className="block rounded-md px-2 py-2 text-base text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                            >
+                                {it.title}
+                            </Link>
+                        ))}
+                    </div>
+                </li>
+            </ul>
+        </li>
+    );
 }
 
 function Burger({ open }: { open: boolean }) {
-  return (
-    <span aria-hidden="true" className="relative block h-3.5 w-4">
-      <span
-        className={`absolute inset-x-0 top-0 h-0.5 origin-center bg-[var(--site-strong)] transition-transform ${
-          open ? "translate-y-1.5 rotate-45" : ""
-        }`}
-      />
-      <span
-        className={`absolute inset-x-0 top-1.5 h-0.5 bg-[var(--site-strong)] transition-opacity ${
-          open ? "opacity-0" : ""
-        }`}
-      />
-      <span
-        className={`absolute inset-x-0 top-3 h-0.5 origin-center bg-[var(--site-strong)] transition-transform ${
-          open ? "-translate-y-1.5 -rotate-45" : ""
-        }`}
-      />
-    </span>
-  );
+    return (
+        <span aria-hidden="true" className="relative block h-3.5 w-4">
+            <span
+                className={`absolute inset-x-0 top-0 h-0.5 origin-center bg-slate-800 transition-transform ${open ? "translate-y-1.5 rotate-45" : ""
+                    }`}
+            />
+            <span
+                className={`absolute inset-x-0 top-1.5 h-0.5 bg-slate-800 transition-opacity ${open ? "opacity-0" : ""
+                    }`}
+            />
+            <span
+                className={`absolute inset-x-0 top-3 h-0.5 origin-center bg-slate-800 transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""
+                    }`}
+            />
+        </span>
+    );
+}
+
+/** ---------- Language toggle (DE/EN) ---------- */
+function LanguageToggle({ compact = false }: { compact?: boolean }) {
+    const [lang, setLang] = useState<Locale>("de");
+
+    useEffect(() => {
+        const current = (document.documentElement.lang as Locale) || "de";
+        setLang(current);
+    }, []);
+
+    const setLocale = (next: Locale) => {
+        const oneYear = 60 * 60 * 24 * 365;
+        document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${oneYear}; samesite=lax`;
+        window.location.reload();
+    };
+
+    const Btn = ({ code, label }: { code: Locale; label: string }) => (
+        <button
+            type="button"
+            onClick={() => setLocale(code)}
+            aria-pressed={lang === code}
+            className={`inline-flex items-center justify-center rounded-md px-2.5 py-1 text-[0.72rem] font-medium ${lang === code
+                ? "bg-slate-900 text-white"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                }`}
+        >
+            {label}
+        </button>
+    );
+
+    return (
+        <div
+            className={`inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white/80 p-0.5 ${compact ? "" : "ml-1"
+                }`}
+            role="group"
+            aria-label="Select language"
+        >
+            <Btn code="de" label="DE" />
+            <Btn code="en" label="EN" />
+        </div>
+    );
+}
+
+/** ---------- Mobile helpers ---------- */
+function MobileTopRow({
+    onOpen,
+    active,
+}: {
+    onOpen: (which: OpenMenu) => void;
+    active: OpenMenu;
+}) {
+    return (
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 pb-2 pt-1 md:hidden">
+            <button
+                className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm ${active === "services"
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    }`}
+                onClick={() => onOpen("services")}
+                type="button"
+            >
+                Services
+                <ChevronDown small up={active === "services"} />
+            </button>
+            <button
+                className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm ${active === "aurillia"
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    }`}
+                onClick={() => onOpen("aurillia")}
+                type="button"
+            >
+                Aurillia
+                <ChevronDown small up={active === "aurillia"} />
+            </button>
+        </div>
+    );
+}
+
+function MobileDropdown({
+    open,
+    heading,
+    items,
+    onClose,
+    rightSlot,
+}: {
+    open: boolean;
+    heading: string;
+    items: Item[];
+    onClose: () => void;
+    rightSlot?: ReactNode;
+}) {
+    if (!open) return null;
+    return (
+        <div className="fixed left-4 right-4 top-16 z-[60] md:hidden">
+            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl">
+                <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2">
+                    <div>
+                        <p className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-500">
+                            {heading}
+                        </p>
+                        <ul className="max-h-[60vh] space-y-1 overflow-y-auto overscroll-contain pr-1">
+                            {items.map((it) => (
+                                <li key={it.href}>
+                                    <Link
+                                        href={it.href}
+                                        className="group block rounded-lg px-3 py-2 hover:bg-slate-50"
+                                        onClick={onClose}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm font-medium text-slate-900 group-hover:text-slate-950">
+                                                {it.title}
+                                            </span>
+                                            <span
+                                                aria-hidden
+                                                className="text-slate-400 group-hover:text-slate-600"
+                                            >
+                                                ›
+                                            </span>
+                                        </div>
+                                        {it.description && (
+                                            <p className="mt-1 line-clamp-2 text-xs text-slate-500">
+                                                {it.description}
+                                            </p>
+                                        )}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    {rightSlot && (
+                        <div className="hidden sm:block">
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                {rightSlot}
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="flex justify-end border-t border-slate-200 px-4 py-2">
+                    <button
+                        type="button"
+                        className="rounded-md px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                        onClick={onClose}
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ChevronDown({ up = false, small = false }: { up?: boolean; small?: boolean }) {
+    return (
+        <svg
+            className={`transition-transform ${up ? "rotate-180" : ""} ${small ? "h-4 w-4" : "h-5 w-5"
+                }`}
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+        >
+            <path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z" />
+        </svg>
+    );
 }
