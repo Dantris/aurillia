@@ -7,9 +7,9 @@ export const servicePages: Record<Locale, Record<ServiceSlug, Omit<ServicePagePr
   de: {
     web: {
       eyebrow: "Leistungen / Webentwicklung",
-      title: "Eine Website, die euer Angebot schneller verständlich macht.",
+      title: "Mehr Anfragen durch eine Website, die sofort überzeugt.",
       intro:
-        "Wenn eure Website alt wirkt, unklar bleibt oder wichtige Fragen offenlässt, kostet das Anfragen, Bewerbungen und Vertrauen. Wir bringen Angebot, Inhalte, Design und Technik so zusammen, dass Besucher schneller verstehen, warum ihr die richtige Wahl seid.",
+        "Wenn eure Website alt wirkt, unklar ist oder Besucher nicht schnell genug verstehen, was ihr anbietet, verliert ihr Vertrauen. Wir bringen Design, Inhalte und Technik so zusammen, dass euer Angebot klarer wirkt und aus Besuchern eher Kunden werden.",
       primaryCta: "Website verbessern",
       secondaryCta: "Was wir übernehmen",
       contactInterest: "Web Development",
