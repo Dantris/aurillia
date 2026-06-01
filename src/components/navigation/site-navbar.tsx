@@ -23,7 +23,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "PWA, App oder mobiler Ablauf, wenn der Browser zu umständlich wird.",
+      description: "Für Aufgaben, die unterwegs einfacher laufen sollen als im Browser.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
@@ -49,7 +49,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "PWA, app, or mobile workflow when the browser is not enough.",
+      description: "For workflows that should be easier on the go than in a browser.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
