@@ -7,11 +7,7 @@ import { getSupabaseServer } from "@/lib/supabaseServer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  maxRetries: 0,
-  timeout: 12_000,
-});
+let cachedOpenAI: OpenAI | null = null;
 
 type Locale = "de" | "en";
 type ChatMessage = {
@@ -121,6 +117,16 @@ const GREETING_PATTERN = /^(hi|hello|hey|hallo|moin|servus|guten\s+(tag|morgen|a
 function numberFromEnv(key: string, fallback: number) {
   const value = Number(process.env[key]);
   return Number.isFinite(value) && value > 0 ? value : fallback;
+}
+
+function getOpenAIClient() {
+  cachedOpenAI ??= new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    maxRetries: 0,
+    timeout: 12_000,
+  });
+
+  return cachedOpenAI;
 }
 
 function json(data: unknown, status = 200) {
@@ -483,6 +489,8 @@ export async function POST(req: NextRequest) {
     if (!CHAT_ENABLED || !process.env.OPENAI_API_KEY) {
       return safeAssistantResponse(locale, "unavailable", 503);
     }
+
+    const openai = getOpenAIClient();
 
     if (req.headers.get("x-aurillia-chat") !== REQUIRED_CLIENT_HEADER) {
       return json({ error: "Forbidden" }, 403);
