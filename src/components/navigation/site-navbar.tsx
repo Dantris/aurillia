@@ -23,7 +23,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "Für Aufgaben, die unterwegs einfacher laufen sollen als im Browser.",
+      description: "Wenn Kunden oder Teams unterwegs schnell etwas erledigen sollen.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
@@ -49,7 +49,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "For workflows that should be easier on the go than in a browser.",
+      description: "When customers or teams need to get things done on the go.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
