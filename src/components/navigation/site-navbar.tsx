@@ -23,7 +23,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "Wenn Kunden oder Teams unterwegs schnell etwas erledigen sollen.",
+      description: "Apps und mobile Lösungen für Buchungen, Bestellungen, interne Abläufe oder Kundenportale.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
@@ -49,7 +49,7 @@ const SERVICES: Record<Locale, ServiceItem[]> = {
     {
       title: "Mobile Apps",
       href: "/services/mobile",
-      description: "When customers or teams need to get things done on the go.",
+      description: "Apps and mobile solutions for bookings, orders, internal workflows, or customer portals.",
       highlights: ["iOS", "Android", "PWA"],
     },
     {
